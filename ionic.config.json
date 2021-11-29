@@ -1,0 +1,7 @@
+{
+  "name": "tip-of-the-tongue",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
