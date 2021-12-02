@@ -1,22 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { WordService } from '../core/services/word/word.service';
-import { CategoryService } from '../core/services/category/category.service';
-import { Category } from '../core/models/category.model';
+import { Component } from '@angular/core';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage {
 
-  mainCategories: Array<Category>;
-
-  constructor(private wordService: WordService,
-              private categoryService: CategoryService) {
+  constructor(private navController: NavController) {
   }
 
-  async ngOnInit() {
-    this.mainCategories = await this.categoryService.getMainCategories();
+  goToMainCategories() {
+    this.navController.navigateForward('main-categories');
   }
 }

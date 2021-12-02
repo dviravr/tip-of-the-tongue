@@ -31,7 +31,11 @@
                 "output": "./svg"
               }
             ],
-            "styles": ["src/theme/variables.scss", "src/global.scss"],
+            "styles": [
+              "src/theme/variables.scss",
+              "src/global.scss",
+              "src/assets/styles/zkin-ui-kit.css"
+            ],
             "scripts": [],
             "aot": false,
             "vendorChunk": true,
