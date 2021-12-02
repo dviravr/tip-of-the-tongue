@@ -1,0 +1,6 @@
+{
+	"appId": "com.example.tip_of_the_tongue",
+	"appName": "tip-of-the-tongue",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

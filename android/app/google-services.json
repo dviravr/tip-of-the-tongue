@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "555873895034",
+    "project_id": "tip-of-the-tongue-41c59",
+    "storage_bucket": "tip-of-the-tongue-41c59.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:555873895034:android:df8ff8898d5be07a14b1c3",
+        "android_client_info": {
+          "package_name": "com.example.tip_of_the_tongue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "555873895034-9q5de7s3b85hcj2c2nngre4gq9dbq37a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCt58l3jsZFgUSan0Y6BEiovMYR91qXp-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "555873895034-9q5de7s3b85hcj2c2nngre4gq9dbq37a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
