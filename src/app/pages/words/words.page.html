@@ -1,0 +1,19 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>words</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <ion-grid class="h-100">
+    <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+    <ion-row *ngIf="!isLoading">
+      <ion-col class="text-center col-12" *ngFor="let word of finalWord">
+        <ion-button class="w-75" >
+          {{word.word}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
