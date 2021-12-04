@@ -14,7 +14,11 @@ const routes: Routes = [
   {
     path: 'main-categories',
     loadChildren: () => import('./pages/main-categories/main-categories.module').then( m => m.MainCategoriesPageModule)
+  },  {
+    path: 'words',
+    loadChildren: () => import('./pages/words/words.module').then( m => m.WordsPageModule)
   },
+
 ];
 
 @NgModule({
