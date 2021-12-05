@@ -25,8 +25,8 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
     }
   }
 
-  getFinalWords(categories: Array<string>) {
-    const query = this.collection.ref.where('categories', '==', categories);
+  getFinalWords(categoritID: string) {
+    const query = this.collection.ref.where('categories', 'array-contains', categoritID);
 
     return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
   }
