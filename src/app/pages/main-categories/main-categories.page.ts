@@ -13,6 +13,7 @@ export class MainCategoriesPage implements OnInit {
 
   mainCategories: Array<Category>;
   isLoading: boolean;
+  arrayOfCategory: Array<string>;
 
   constructor(private wordService: WordService,
               private categoryService: CategoryService,
@@ -20,19 +21,21 @@ export class MainCategoriesPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.arrayOfCategory=[];
     this.isLoading = true;
     this.mainCategories = await this.categoryService.getMainCategories();
     this.isLoading = false;
   }
 
   async goSubCategories(category: Category) {
+    this.arrayOfCategory.push(category.id);
     if (category.subCategories?.length > 0) {
       this.isLoading = true;
       this.mainCategories = await this.categoryService.getByUids(category.subCategories);
       this.isLoading = false;
     }else{
 
-      this.navController.navigateRoot('words',{state:{categoryID: category.id,question: category.subQuestion}});
+      this.navController.navigateRoot('words',{state:{categoryID: this.arrayOfCategory,question: category.subQuestion}});
 
     }
   }

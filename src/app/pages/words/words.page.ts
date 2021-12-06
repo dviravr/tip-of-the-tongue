@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute,Router} from '@angular/router';
+import { Router } from '@angular/router';
 //import { NavParams } from '@ionic/angular';
-import {Word} from '../../core/models/word.model';
-import {WordService} from '../../core/services/word/word.service';
+import { Word } from '../../core/models/word.model';
+import { WordService } from '../../core/services/word/word.service';
 
 
 @Component({
@@ -15,7 +15,7 @@ export class WordsPage implements OnInit {
 
   finalWord: Array<Word>;
   isLoading: boolean;
-  categoryID: string;
+  categoryID: Array<string>;
   question: string;
 
   constructor(private wordService: WordService,
