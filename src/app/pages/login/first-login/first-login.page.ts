@@ -76,7 +76,7 @@ export class FirstLoginPage implements OnInit {
       birthDate,
       phoneNumber
     } as User;
-    await this.userService.createNewUser(user);
+    await this.userService.signupNewUser(user);
     this.navController.navigateForward('home');
   }
 }

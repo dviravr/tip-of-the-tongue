@@ -13,6 +13,9 @@ export class AuthService {
 
   constructor(private angularFireAuth: AngularFireAuth,
               private userService: UserService) {
+    this.angularFireAuth.authState.subscribe(_ => {
+      console.log(_);
+    });
   }
 
   loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
@@ -23,7 +26,7 @@ export class AuthService {
     );
   }
 
-  createUserWithEmail(email: string, password: string, rememberMe: boolean) {
+  signupWithEmail(email: string, password: string, rememberMe: boolean) {
     return this.angularFireAuth.createUserWithEmailAndPassword(email, password);
   }
 

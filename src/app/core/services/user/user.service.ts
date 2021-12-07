@@ -51,7 +51,7 @@ export class UserService extends GenericModelService<User, FirestoreUser> {
     this.#firebaseUser = value;
   }
 
-  async createNewUser(user: User) {
+  async signupNewUser(user: User) {
     this.loggedInUser = await this.create(user, this.firebaseUser.uid);
   }
 

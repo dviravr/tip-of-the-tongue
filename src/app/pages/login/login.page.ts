@@ -53,7 +53,7 @@ export class LoginPage implements OnInit {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       if (this.isRegistration) {
-        this.authService.createUserWithEmail(email, password, this.rememberMe).then(res => {
+        this.authService.signupWithEmail(email, password, this.rememberMe).then(res => {
           this.goToFirstLogin();
         }).catch(error => {
           console.log(error);

@@ -3,22 +3,27 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   },
   {
-    path: 'main-categories',
-    loadChildren: () => import('./pages/main-categories/main-categories.module').then(m => m.MainCategoriesPageModule)
+    path: 'therapist',
+    loadChildren: () => import('./pages/therapist/therapist.module').then( m => m.TherapistPageModule),
+    canActivate: []
+  },
+  {
+    path: 'patient',
+    loadChildren: () => import('./pages/patient/patient.module').then( m => m.PatientPageModule)
   },
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule)
   },
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  }
+    path: '**',
+    redirectTo: 'login'
+  },
 ];
 
 @NgModule({
