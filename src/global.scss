@@ -31,3 +31,22 @@ ion-spinner {
   top: 50%;
   transform: scale(3);
 }
+
+.validation-errors {
+  height: 16px;
+
+  .error-message {
+    font-size: 0.8em;
+  }
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+}
+
+.input-label {
+  color: #9e9e9e;
+  font-size: 9pt;
+  margin-right: 11px;
+}
