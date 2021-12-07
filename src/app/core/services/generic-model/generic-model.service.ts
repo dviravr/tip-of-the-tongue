@@ -93,11 +93,11 @@ export abstract class GenericModelService<T extends BaseModel, S> {
   async create(data, id?: string): Promise<T> {
     const now = new Date();
     data.updateDate = now;
+    data.createDate = now;
     if (id) {
       await this.collection.doc(id).set(data);
       return await this.getByUid(id);
     } else {
-      data.createDate = now;
       const ref: any = await this.collection.add(data);
       return await this.getByUid(ref.id);
     }
