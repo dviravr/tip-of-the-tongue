@@ -75,6 +75,6 @@ export class LoginPage implements OnInit {
   }
 
   goToHome() {
-    this.navController.navigateForward('home');
+    this.navController.navigateForward('patient');
   }
 }

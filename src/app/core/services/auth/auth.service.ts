@@ -1,21 +1,30 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { auth } from 'firebase/app';
-import { from } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { auth, User as FirebaseUser } from 'firebase/app';
+import { forkJoin, from, Observable, of } from 'rxjs';
+import { mergeMap, switchMap, tap } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
-import { User as FirebaseUser } from 'firebase/app';
+import { User } from '../../models/user.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
+  firebaseUser$: Observable<[FirebaseUser, User]>;
+
   constructor(private angularFireAuth: AngularFireAuth,
               private userService: UserService) {
-    this.angularFireAuth.authState.subscribe(_ => {
-      console.log(_);
-    });
+    this.firebaseUser$ = angularFireAuth.authState.pipe(
+      mergeMap((firebaseUser) => forkJoin([
+        of(firebaseUser),
+        from(firebaseUser ? this.userService.getByUid(firebaseUser.uid) : of(null))
+      ])),
+      tap(async ([firebaseUser, appUser]) => {
+        if (firebaseUser) {
+          await this.userService.loginUser(this.getPartialFirebaseUser(firebaseUser));
+        }
+      }));
   }
 
   loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
@@ -23,6 +32,13 @@ export class AuthService {
     return from(this.angularFireAuth.setPersistence(persistence)).pipe(
       switchMap(() => this.angularFireAuth.signInWithEmailAndPassword(email, password)),
       switchMap(async (userCredential: auth.UserCredential) => this.userService.loginUser(this.getPartialFirebaseUser(userCredential.user)))
+    );
+  }
+
+  logoutUser() {
+    return from(this.angularFireAuth.signOut()).pipe(
+      // switchMap(() => this.firebaseUser$ = from(of(null))),
+      switchMap(async () => this.userService.logout())
     );
   }
 

@@ -4,17 +4,22 @@ import { CollectionEnum } from '../../enum/collections.enum';
 import { GenericModelService } from '../generic-model/generic-model.service';
 import { FirestoreUser, User } from '../../models/user.model';
 import { User as FirebaseUser } from 'firebase/app';
+import { from, Observable, of } from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService extends GenericModelService<User, FirestoreUser> {
 
-  #loggedInUser: User;
-  #firebaseUser: Partial<FirebaseUser>;
+  loggedInUser$: Observable<User>;
 
-  constructor(protected angularFirestore: AngularFirestore) {
+  constructor(protected angularFirestore: AngularFirestore,
+              private angularFireAuth: AngularFireAuth) {
     super(angularFirestore, CollectionEnum.users);
+    angularFireAuth.authState.subscribe(firebaseUser => {
+      this.loggedInUser$ = from(firebaseUser ? this.getByUid(firebaseUser.uid) : of(null));
+    });
   }
 
   mapModelToClient(doc: QueryDocumentSnapshot<DocumentData>): User {
@@ -35,36 +40,24 @@ export class UserService extends GenericModelService<User, FirestoreUser> {
     }
   }
 
-  get loggedInUser(): User {
-    return this.#loggedInUser;
+  async signupNewUser(firebaseUser: FirebaseUser, user: User) {
+    const newUser = await this.create(user, firebaseUser.uid);
+    this.loggedInUser$ = from(of(newUser));
   }
-
-  set loggedInUser(value: User) {
-    this.#loggedInUser = value;
-  }
-
-  get firebaseUser(): Partial<FirebaseUser> {
-    return this.#firebaseUser;
-  }
-
-  set firebaseUser(value: Partial<FirebaseUser>) {
-    this.#firebaseUser = value;
-  }
-
-  async signupNewUser(user: User) {
-    this.loggedInUser = await this.create(user, this.firebaseUser.uid);
-  }
-
 
   async loginUser(firebaseUser: Partial<FirebaseUser>) {
-    this.firebaseUser = firebaseUser;
     const user = await this.getByUid(firebaseUser.uid);
     if (!user) {
       // return true if this is first login
+      this.loggedInUser$ = from(of(null));
       return true;
     } else {
-      this.loggedInUser = user;
+      this.loggedInUser$ = from(of(user));
       return false;
     }
+  }
+
+  logout() {
+    this.loggedInUser$ = from(of(null));
   }
 }
