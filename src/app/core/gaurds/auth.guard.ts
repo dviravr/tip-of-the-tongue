@@ -19,21 +19,21 @@ export class AuthGuard implements CanActivate {
 
     const requiredUserType = route.data.requiredUserType as UserTypeEnum;
 
-    return this.authService.firebaseUser$.pipe(
+    return this.authService.loggedInUser$.pipe(
       take(1),
       map(([firebaseUser, loggedInUser]) => {
         if (firebaseUser && !loggedInUser) {
-          return this.router.createUrlTree(['/login/first-login']);
+          return this.router.createUrlTree(['first-login']);
         } else if (firebaseUser && loggedInUser) {
           if (requiredUserType === loggedInUser.userType) {
             return true;
           }
-          return this.router.createUrlTree([`/${loggedInUser.userType}`]);
+          return this.router.createUrlTree([`${loggedInUser.userType}`]);
         }
         if (!requiredUserType) {
           return true;
         }
-        return this.router.createUrlTree(['/login']);
+        return this.router.createUrlTree(['login']);
       })
     );
   }

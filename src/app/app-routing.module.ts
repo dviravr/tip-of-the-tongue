@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './core/gaurds/auth.guard';
 import { UserTypeEnum } from './core/enum/userType.enum';
-import { canActivate, redirectLoggedInTo } from '@angular/fire/auth-guard';
+import { FirstLoginGuard } from './core/gaurds/first-login.guard';
 
 const routes: Routes = [
   {
@@ -29,8 +29,12 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
-    // ...canActivate(() => redirectLoggedInTo(['first-login']))
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'first-login',
+    loadChildren: () => import('./pages/first-login/first-login.module').then(m => m.FirstLoginPageModule),
+    canActivate: [FirstLoginGuard]
   },
   {
     path: '**',

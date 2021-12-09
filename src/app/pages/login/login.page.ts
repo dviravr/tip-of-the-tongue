@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { UserService } from '../../core/services/user/user.service';
+import { Subscription } from 'rxjs';
+import { UserTypeEnum } from '../../core/enum/userType.enum';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -49,21 +52,19 @@ export class LoginPage implements OnInit {
     });
   }
 
-  loginUser() {
+  async loginUser() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
       if (this.isRegistration) {
-        this.authService.signupWithEmail(email, password, this.rememberMe).then(res => {
+        this.authService.signupWithEmail(email, password, this.rememberMe).then(() => {
           this.goToFirstLogin();
-        }).catch(error => {
-          console.log(error);
         });
       } else {
-        this.authService.loginUserWithEmail(email, password, this.rememberMe).subscribe((firstLogin) => {
-          if (firstLogin) {
-            this.goToFirstLogin();
+        this.authService.loginUserWithEmail(email, password, this.rememberMe).pipe(take(1)).subscribe((user) => {
+          if (user) {
+            this.goToHome(user.userType);
           } else {
-            this.goToHome();
+            this.goToFirstLogin();
           }
         });
       }
@@ -71,10 +72,10 @@ export class LoginPage implements OnInit {
   }
 
   goToFirstLogin() {
-    this.navController.navigateForward('login/first-login');
+    this.navController.navigateForward('first-login');
   }
 
-  goToHome() {
-    this.navController.navigateForward('patient');
+  goToHome(userType: UserTypeEnum) {
+    this.navController.navigateRoot(userType, { animationDirection: 'forward' });
   }
 }

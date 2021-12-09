@@ -2,57 +2,55 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User as FirebaseUser } from 'firebase/app';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { mergeMap, switchMap, tap } from 'rxjs/operators';
+import { mergeMap, switchMap } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { User } from '../../models/user.model';
+import { NavController } from '@ionic/angular';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  firebaseUser$: Observable<[FirebaseUser, User]>;
+  loggedInUser$: Observable<[FirebaseUser, User]>;
 
   constructor(private angularFireAuth: AngularFireAuth,
+              private navController: NavController,
               private userService: UserService) {
-    this.firebaseUser$ = angularFireAuth.authState.pipe(
+    this.loggedInUser$ = angularFireAuth.authState.pipe(
       mergeMap((firebaseUser) => forkJoin([
         of(firebaseUser),
         from(firebaseUser ? this.userService.getByUid(firebaseUser.uid) : of(null))
-      ])),
-      tap(async ([firebaseUser, appUser]) => {
-        if (firebaseUser) {
-          await this.userService.loginUser(this.getPartialFirebaseUser(firebaseUser));
-        }
-      }));
+      ])));
   }
 
   loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     return from(this.angularFireAuth.setPersistence(persistence)).pipe(
       switchMap(() => this.angularFireAuth.signInWithEmailAndPassword(email, password)),
-      switchMap(async (userCredential: auth.UserCredential) => this.userService.loginUser(this.getPartialFirebaseUser(userCredential.user)))
+      switchMap(async (userCredential: auth.UserCredential) => this.loginUser(userCredential.user))
     );
   }
 
-  logoutUser() {
-    return from(this.angularFireAuth.signOut()).pipe(
-      // switchMap(() => this.firebaseUser$ = from(of(null))),
-      switchMap(async () => this.userService.logout())
-    );
+  registerNewUser(firebaseUser: FirebaseUser, user: User) {
+    this.loggedInUser$ = forkJoin([of(firebaseUser), this.userService.create(user, firebaseUser.uid)]);
   }
 
-  signupWithEmail(email: string, password: string, rememberMe: boolean) {
-    return this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+  async loginUser(newFirebaseUser: FirebaseUser) {
+    const user = await this.userService.getByUid(newFirebaseUser.uid);
+    this.loggedInUser$ = forkJoin([of(newFirebaseUser), of(user)]);
+    return user;
   }
 
-  getPartialFirebaseUser(user: FirebaseUser): Partial<FirebaseUser> {
-    // Add here any data the stored on the firebase user that we will need to use.
-    return {
-      uid: user.uid,
-      email: user.email,
-      providerData: user.providerData,
-      providerId: user.providerId,
-    };
+  async logoutUser() {
+    await this.angularFireAuth.signOut();
+    this.loggedInUser$ = forkJoin([of(null), of(null)]);
+    this.navController.navigateRoot('login');
+  }
+
+  async signupWithEmail(email: string, password: string, rememberMe: boolean) {
+    const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
+    await this.angularFireAuth.setPersistence(persistence);
+    await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
   }
 }

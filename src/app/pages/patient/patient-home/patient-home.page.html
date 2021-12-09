@@ -1,11 +1,16 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>patient-home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<app-tip-header [headerText]="'patient-home'"></app-tip-header>
+
 
 <ion-content>
-  <ion-button (click)="logout()">
-    התנתק
-  </ion-button>
+
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="d-flex justify-content-center w-100">
+      <ion-button class="w-50" color="danger" fill="outline" (click)="logout()">
+        התנתק
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>
