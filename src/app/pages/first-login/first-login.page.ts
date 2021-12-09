@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { UserTypeEnum } from '../../../core/enum/userType.enum';
+import { UserTypeEnum } from '../../core/enum/userType.enum';
 import { Router } from '@angular/router';
-import { UserService } from '../../../core/services/user/user.service';
-import { User } from '../../../core/models/user.model';
+import { UserService } from '../../core/services/user/user.service';
+import { User } from '../../core/models/user.model';
 import { NavController } from '@ionic/angular';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { User as FirebaseUser } from 'firebase/app';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-first-login',
@@ -31,14 +34,15 @@ export class FirstLoginPage implements OnInit {
       { type: 'required', message: 'נדרש להזין תאריך לידה' }
     ]
   };
+  firebaseUser: FirebaseUser;
 
   constructor(private router: Router,
               private userService: UserService,
+              private authService: AuthService,
               private navController: NavController) {
   }
 
   ngOnInit() {
-    this.segmentChanged(UserTypeEnum.patient);
     this.registerForm = new FormGroup({
       firstName: new FormControl(undefined, [
         Validators.required
@@ -52,7 +56,7 @@ export class FirstLoginPage implements OnInit {
         Validators.pattern(/^05\d{8}$/),
         Validators.required
       ]),
-      email: new FormControl(this.userService.firebaseUser.email, [
+      email: new FormControl(undefined, [
         Validators.required,
         Validators.email
       ]),
@@ -60,6 +64,11 @@ export class FirstLoginPage implements OnInit {
         Validators.required
       ])
     });
+    this.authService.loggedInUser$.pipe(take(1)).subscribe(([firebaseUser, user]) => {
+      this.firebaseUser = firebaseUser;
+      this.registerForm.get('email').setValue(firebaseUser.email);
+    });
+    this.segmentChanged(UserTypeEnum.patient);
   }
 
   segmentChanged(newValue: UserTypeEnum) {
@@ -76,7 +85,7 @@ export class FirstLoginPage implements OnInit {
       birthDate,
       phoneNumber
     } as User;
-    await this.userService.signupNewUser(user);
-    this.navController.navigateForward('home');
+    await this.authService.registerNewUser(this.firebaseUser, user);
+    this.navController.navigateRoot(user.userType, { animationDirection: 'forward' });
   }
 }

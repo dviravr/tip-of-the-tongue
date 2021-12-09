@@ -19,10 +19,12 @@ export abstract class GenericModelService<T extends BaseModel, S> {
     this.collection = angularFirestore.collection<S>(collectionName);
   }
 
+  // return document by uid
   async getByUid(uid: string): Promise<T> {
     return this.collection.doc(uid).get().toPromise().then((doc) => this.mapModelToClient(doc));
   }
 
+  // return documents by uids
   async getByUids(uidArr: string[]): Promise<Array<T>> {
     const subArrays: Array<Array<string>> = [];
     for (let i = 0; i < uidArr.length; i += 10) {
@@ -42,6 +44,7 @@ export abstract class GenericModelService<T extends BaseModel, S> {
     });
   }
 
+  // return all documents in the collection
   async getAll(): Promise<Array<T>> {
     return await this.collection.get().toPromise()
       .then(async (allDocuments) => await Promise

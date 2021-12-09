@@ -1,5 +1,5 @@
 {
-	"appId": "com.example.tip_of_the_tongue",
+	"appId": "io.ionic.starter",
 	"appName": "tip-of-the-tongue",
 	"webDir": "www",
 	"bundledWebRuntime": false
