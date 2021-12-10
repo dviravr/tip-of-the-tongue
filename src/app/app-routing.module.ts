@@ -1,24 +1,45 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './core/gaurds/auth.guard';
+import { UserTypeEnum } from './core/enum/userType.enum';
+import { FirstLoginGuard } from './core/gaurds/first-login.guard';
 
 const routes: Routes = [
   {
-    path: 'home',
-    loadChildren: () => import('./home/home.module').then(m => m.HomePageModule)
-  },
-  {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'login',
     pathMatch: 'full'
   },
   {
-    path: 'main-categories',
-    loadChildren: () => import('./pages/main-categories/main-categories.module').then( m => m.MainCategoriesPageModule)
-  },  {
-    path: 'words',
-    loadChildren: () => import('./pages/words/words.module').then( m => m.WordsPageModule)
+    path: 'therapist',
+    loadChildren: () => import('./pages/therapist/therapist.module').then(m => m.TherapistPageModule),
+    canActivate: [AuthGuard],
+    data: {
+      requiredUserType: UserTypeEnum.therapist
+    }
   },
-
+  {
+    path: 'patient',
+    loadChildren: () => import('./pages/patient/patient.module').then(m => m.PatientPageModule),
+    canActivate: [AuthGuard],
+    data: {
+      requiredUserType: UserTypeEnum.patient
+    }
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginPageModule),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'first-login',
+    loadChildren: () => import('./pages/first-login/first-login.module').then(m => m.FirstLoginPageModule),
+    canActivate: [FirstLoginGuard]
+  },
+  {
+    path: '**',
+    redirectTo: 'login'
+  }
 ];
 
 @NgModule({

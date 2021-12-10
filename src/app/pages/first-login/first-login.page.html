@@ -1,0 +1,57 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>רישום משתמש חדש</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content style="height: 94vh;" [scrollY]="false">
+  <ion-grid>
+    <ion-row>
+      <ion-col class="col-12" size="12" size-md="7" size-lg="6" size-xl="4">
+        <ion-segment [(ngModel)]="userType">
+          <ion-segment-button [value]="userTypeEnum.patient">
+            <ion-label>מטופל</ion-label>
+          </ion-segment-button>
+          <ion-segment-button [value]="userTypeEnum.therapist">
+            <ion-label>קלינאי</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-col>
+    </ion-row>
+    <form [formGroup]="registerForm" style="direction: rtl" class="pl-3 pr-3 pt-3">
+      <div class="d-flex flex-column w-75">
+        <mat-form-field appearance="fill">
+          <mat-label>שם פרטי</mat-label>
+          <input matInput type="text" formControlName="firstName">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>שם משפחה</mat-label>
+          <input matInput type="text" formControlName="lastName">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>מספר פלאפון</mat-label>
+          <input matInput type="tel" formControlName="phoneNumber">
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>תאריך לידה</mat-label>
+          <input matInput [matDatepicker]="birthDatePicker" formControlName="birthDate">
+          <mat-datepicker-toggle matSuffix [for]="birthDatePicker"></mat-datepicker-toggle>
+          <mat-datepicker #birthDatePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>אימייל</mat-label>
+          <input matInput type="email" formControlName="email">
+        </mat-form-field>
+      </div>
+    </form>
+  </ion-grid>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <div class="justify-content-center d-flex">
+      <ion-button class="w-75" (click)="registerUser()" type="button" color="primary" expand="block" [disabled]="!registerForm.valid">
+        סיום
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

@@ -21,6 +21,7 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
       if (data.patientRef && data.patientRef.ref) {
         data.patientId = data.patient.ref.id;
       }
+      delete data.patientRef;
       return data as Word;
     }
   }

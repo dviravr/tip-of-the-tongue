@@ -1,0 +1,39 @@
+.login-title {
+  height: 61px;
+}
+
+#sign-in-button {
+  height: 43px;
+  width: 75%;
+  background-color: #5260ff;
+  border-radius: 8px;
+  font-size: 11pt;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.link {
+  text-decoration: underline;
+  cursor: pointer;
+  color: #3d45ff !important;
+}
+
+.other-login-buttons {
+  button {
+    padding: 7px;
+    text-transform: none;
+  }
+
+  .btn-apple {
+    background-color: black;
+  }
+}
+
+.login-button-row {
+  ion-button {
+    box-shadow: none !important;
+    -webkit-appearance: none;
+  }
+}
