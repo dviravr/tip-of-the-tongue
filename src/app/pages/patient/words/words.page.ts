@@ -12,7 +12,7 @@ export class WordsPage implements OnInit {
 
   finalWord: Array<Word>;
   isLoading: boolean;
-  categoryID: Array<string>;
+  categoriesIds: Array<string>;
   question: string;
 
   constructor(private wordService: WordService,
@@ -22,12 +22,12 @@ export class WordsPage implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true;
-    this.categoryID = this.router.getCurrentNavigation().extras.state?.categoryID;
+    this.categoriesIds = this.router.getCurrentNavigation().extras.state?.categoryID;
     this.question = this.router.getCurrentNavigation().extras.state?.question;
-    if (this.categoryID) {
-      this.finalWord = await this.wordService.getFinalWords(this.categoryID);
+    if (this.categoriesIds) {
+      this.finalWord = await this.wordService.getFinalWords(this.categoriesIds);
     }
-    console.log(this.categoryID);
+    console.log(this.categoriesIds);
     console.log(this.finalWord);
     console.log((this.question));
 
