@@ -4,13 +4,21 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'patient-home',
+    redirectTo: 'home',
     pathMatch: 'full'
   },
   {
-    path: 'patient-home',
+    path: 'home',
     loadChildren: () => import('./patient-home/patient-home.module').then( m => m.PatientHomePageModule)
+  },  {
+    path: 'categories',
+    loadChildren: () => import('./categories/categories.module').then( m => m.CategoriesPageModule)
+  },
+  {
+    path: 'words',
+    loadChildren: () => import('./words/words.module').then( m => m.WordsPageModule)
   }
+
 ];
 
 @NgModule({

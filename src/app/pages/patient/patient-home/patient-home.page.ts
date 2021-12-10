@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-patient-home',
@@ -8,9 +9,14 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 })
 export class PatientHomePage implements OnInit {
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private navController: NavController) { }
 
   ngOnInit() {
+  }
+
+  goToMainCategories() {
+    this.navController.navigateForward('/patient/categories');
   }
 
   async logout() {

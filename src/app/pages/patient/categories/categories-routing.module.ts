@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
+import { CategoriesPage } from './categories.page';
+
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
-  },
-  {
-    path: 'home',
-    loadChildren: () => import('./therapist-home/therapist-home.module').then( m => m.TherapistHomePageModule)
+    component: CategoriesPage
   }
 ];
 
@@ -17,4 +14,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class TherapistPageRoutingModule {}
+export class CategoriesPageRoutingModule {}
