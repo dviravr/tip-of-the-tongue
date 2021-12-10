@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { WordsPageRoutingModule } from './words-routing.module';
 
 import { WordsPage } from './words.page';
+import { TherapistPageRoutingModule } from '../../../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    WordsPageRoutingModule
+    WordsPageRoutingModule,
+    TherapistPageRoutingModule
   ],
   declarations: [WordsPage]
 })

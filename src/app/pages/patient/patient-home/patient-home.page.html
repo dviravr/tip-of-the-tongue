@@ -1,8 +1,11 @@
 <app-tip-header [headerText]="'patient-home'"></app-tip-header>
 
-
-<ion-content>
-
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <div class="h-100 w-100 justify-content-center align-items-center d-flex">
+    <ion-button class="w-50" (click)="goToMainCategories()">
+      התחל
+    </ion-button>
+  </div>
 </ion-content>
 
 <ion-footer>
