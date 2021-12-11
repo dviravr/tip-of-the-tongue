@@ -1,0 +1,62 @@
+<ion-content [scrollY]="false">
+  <form [formGroup]="loginForm" (ngSubmit)="loginUser()">
+    <ion-grid>
+      <ion-row>
+        <ion-col class="col-12 mb-1">
+          <h3 class="font-weight-bold text-center">ברוכים הבאים</h3>
+        </ion-col>
+      </ion-row>
+
+      <ion-row class="justify-content-center">
+        <ion-col class="col-12" size="11" size-md="7" size-lg="6" size-xl="4">
+          <div class="input-group">
+            <div class="input-group-inner">
+              <input formControlName="email" type="email" class="form-control text-right" aria-label="Email"
+                     aria-describedby="userEmail" placeholder="אימייל" required
+                     (keyup.enter)="loginForm.valid ? loginUser() : undefined">
+              <div class="input-focus-bg"></div>
+            </div>
+            <div class="validation-errors mr-2 w-100">
+              <ng-container *ngFor="let validation of validationMessages.email">
+                <div class="error-message input-style text-right"
+                     *ngIf="loginForm.get('email')?.hasError(validation.type) && (loginForm.get('email').dirty || loginForm.get('email').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+          </div>
+          <div class="input-group">
+            <div class="input-group-inner">
+              <input formControlName="password" [type]="passwordVisible ? 'text' : 'password'" class="form-control text-right"
+                     aria-label="Password" aria-describedby="userPassword" placeholder="סיסמא" required
+                     (keyup.enter)="loginForm.valid ? loginUser() : undefined">
+              <div class="input-focus-bg"></div>
+            </div>
+            <div class="validation-errors mr-2 w-100">
+              <ng-container *ngFor="let validation of validationMessages.password">
+                <div class="error-message input-style text-right"
+                     *ngIf="loginForm.get('password')?.hasError(validation.type) && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+                  {{ validation.message }}
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </ion-col>
+      </ion-row>
+      <ion-row class="login-button-row ion-justify-content-center">
+        <ion-col size="9" size-md="6" size-lg="5" size-xl="3">
+          <ion-button type="submit" color="primary" expand="block" [disabled]="!loginForm.valid">
+            {{isRegistration ? 'הירשמות' : 'התחברות'}}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col class="text-center" style="font-size: small">
+          <span>לא רשום עדיין? </span>
+          <a class="link" (click)="isRegistration = !isRegistration">לחץ כאן</a>
+          <span> כדי להירשם</span>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

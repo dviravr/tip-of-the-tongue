@@ -1,0 +1,51 @@
+<app-tip-header [headerText]="'רשימת המילים המוצעות'"></app-tip-header>
+
+<!--<ion-header>-->
+<!--  <ion-toolbar>-->
+<!--    <ion-title>רשימת המילים המוצעות:</ion-title>-->
+<!--  </ion-toolbar>-->
+<!--  <ion-title >המילה הנדרשת אמורה להופיע ברשימה:</ion-title>-->
+<!--</ion-header>-->
+
+<!--<ion-header>-->
+<!--  <ion-title >המילה הנדרשת אמורה להופיע ברשימה:</ion-title>-->
+<!--</ion-header>-->
+
+<ion-content [fullscreen]="true" [scrollY]="false">
+  <ion-grid class="h-100">
+    <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+    <ion-row *ngIf="!isLoading">
+      <ion-col class="text-center col-12" *ngFor="let word of finalWord">
+        <ion-button class="w-75">
+          {{word.word}}
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+
+</ion-content>
+
+<ion-card>
+  <ion-card-header>
+    <ion-card-title> לצערנו לא הצלחנו להגיע למילה המבוקשת</ion-card-title>
+    <ion-card-subtitle> מה תרצו לעשות עכשיו?</ion-card-subtitle>
+  </ion-card-header>
+
+  <ion-card-content>
+    <ion-grid class="mh-100">
+      <ion-row>
+        <ion-col class="text-center col-6">
+          <ion-button class="w-75">
+            בואו ננסה למצוא אותה שוב.
+          </ion-button>
+        </ion-col>
+        <ion-col class="text-center col-6">
+          <ion-button class="w-75">
+            עזבו לא משנה. נמשיך את זה בפעם אחרת.
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-card-content>
+</ion-card>

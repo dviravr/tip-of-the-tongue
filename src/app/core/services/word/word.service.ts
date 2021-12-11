@@ -21,14 +21,19 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
       if (data.patientRef && data.patientRef.ref) {
         data.patientId = data.patient.ref.id;
       }
+      delete data.patientRef;
       return data as Word;
     }
   }
 
-  getFinalWords(id: string) {
-    const query = this.collection.ref.where('categories', 'array-contains', id);
-
-    return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
+  getFinalWords(categoriesIds: Array<string>) {
+    if (categoriesIds?.length > 0) {
+      let query = this.collection.ref.where(`categories.${ categoriesIds[0] }`, '==', true);
+      for (let i = 1; i < categoriesIds.length; i++) {
+        query = query.where(`categories.${ categoriesIds[i] }`, '==', true);
+      }
+      return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
+    }
   }
 
   // getWords(categories: Array<string>) {

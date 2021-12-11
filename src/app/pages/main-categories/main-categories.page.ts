@@ -2,8 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { Category } from '../../core/models/category.model';
 import { WordService } from '../../core/services/word/word.service';
 import { CategoryService } from '../../core/services/category/category.service';
-import {NavController} from '@ionic/angular';
-import {Router, ActivatedRoute, NavigationExtras} from '@angular/router';
 
 @Component({
   selector: 'app-main-categories',
@@ -16,9 +14,7 @@ export class MainCategoriesPage implements OnInit {
   isLoading: boolean;
 
   constructor(private wordService: WordService,
-              private categoryService: CategoryService,
-              private navController: NavController,
-              private route: Router) {
+              private categoryService: CategoryService) {
   }
 
   async ngOnInit() {
@@ -32,15 +28,6 @@ export class MainCategoriesPage implements OnInit {
       this.isLoading = true;
       this.mainCategories = await this.categoryService.getByUids(category.subCategories);
       this.isLoading = false;
-    } else { //david
-      //this.isLoading = true;
-      // @ts-ignore
-      //const navigationExtras: NavigationExtras = {categoryID: category.id};
-      this.navController.navigateForward('words');
-      //this.isLoading = false;
-
-
     }
-
   }
 }
