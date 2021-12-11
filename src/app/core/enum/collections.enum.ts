@@ -1,5 +1,6 @@
 export enum CollectionEnum {
   categories = 'categories',
   words = 'words',
-  users = 'users'
+  users = 'users',
+  reports= 'reports'
 }
