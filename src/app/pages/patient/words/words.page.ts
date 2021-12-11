@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Word } from '../../../core/models/word.model';
 import { WordService } from '../../../core/services/word/word.service';
 import { Router } from '@angular/router';
+import { ReportService } from '../../../core/services/report/report.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-words',
@@ -16,8 +19,9 @@ export class WordsPage implements OnInit {
   question: string;
 
   constructor(private wordService: WordService,
-              private router: Router
-  ) {
+              private router: Router,
+              private authService: AuthService,
+              private reportService: ReportService) {
   }
 
   async ngOnInit() {
@@ -34,4 +38,9 @@ export class WordsPage implements OnInit {
     this.isLoading = false;
   }
 
+  async findWord(word: Word) {
+    const loggedInUser: User = (await this.authService.loggedInUser$.toPromise())[1];
+    this.reportService.endTime = new Date();
+    this.reportService.createNewReport(loggedInUser, word);
+  }
 }

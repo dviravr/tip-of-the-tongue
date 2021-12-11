@@ -5,6 +5,7 @@ import { GenericModelService } from '../generic-model/generic-model.service';
 import { CollectionEnum } from '../../enum/collections.enum';
 import { User } from '../../models/user.model';
 import { Word } from '../../models/word.model';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -56,5 +57,15 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
     const query = this.collection.ref.where('patientRef', '==', userRef.id);
     return query.get().then(res => res.docs.map(report => this.mapModelToClient(report)));
   }
+
+  async createNewReport(loggedInUser: User, word: Word) {
+    const report: FirestoreReportSearch = {
+      patientRef: await this.getReferenceByUid(loggedInUser.id),
+      wordRef: await this.getReferenceByUid(word.id),
+      searchTime: moment.duration(this.endTime.getTime() - this.startTime.getTime()).as('seconds')
+    };
+    this.create(report);
+  }
+
 
 }
