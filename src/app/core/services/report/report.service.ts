@@ -26,10 +26,10 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
       // @ts-ignore
       report.id = doc.id;
       if (report.patientRef) {
-        report.patientID = report.patientRef.ref.id;
+        report.patientID = report.patientRef.id;
       }
       if (report.wordRef) {
-        report.wordId = await this.getByUid(report.wordRef);
+        report.wordId = await this.getByUid(report.wordRef.id);
       }
       delete report.wordRef;
       delete report.patientRef;
@@ -38,7 +38,7 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
   }
 
   async getReport(user: User): Promise<Map<Word, { counter: number; avgTime: number }>> {
-    const reports: Array<ReportSearch> = await this.getAllReportsFromFirebase(user.id);
+    const reports: Array<ReportSearch> = await Promise.all(await this.getAllReportsFromFirebase(user.id));
     const reportMap: Map<Word, { counter: number; avgTime: number }> = new Map();
     reports.forEach(report => {
       const word = reportMap.get(report.word);

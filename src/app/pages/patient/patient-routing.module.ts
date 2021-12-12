@@ -17,6 +17,10 @@ const routes: Routes = [
   {
     path: 'words',
     loadChildren: () => import('./words/words.module').then( m => m.WordsPageModule)
+  },
+  {
+    path: 'connect-to-therapist',
+    loadChildren: () => import('./connect-to-therapist/connect-to-therapist.module').then( m => m.ConnectToTherapistPageModule)
   }
 
 ];
