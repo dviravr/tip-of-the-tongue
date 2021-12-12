@@ -18,8 +18,8 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
     if (data) {
       // @ts-ignore
       data.id = doc.id;
-      if (data.patientRef && data.patientRef.ref) {
-        data.patientId = data.patient.ref.id;
+      if (data.patientRef) {
+        data.patientId = data.patient.id;
       }
       delete data.patientRef;
       return data as Word;
