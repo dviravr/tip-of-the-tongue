@@ -3,6 +3,7 @@
 <ion-content [fullscreen]="true" [scrollY]="false">
   <ion-grid class="h-100">
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+    <h2 class="font-weight-bold text-center" >{{question}}</h2>
     <ion-row *ngIf="!isLoading">
       <ion-col class="text-center col-12" *ngFor="let category of currentCategories">
         <ion-button class="w-75" (click)="goSubCategories(category)">

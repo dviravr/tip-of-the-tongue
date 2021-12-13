@@ -15,6 +15,7 @@ export class CategoriesPage implements OnInit {
   currentCategories: Array<Category>;
   isLoading: boolean;
   arrayOfCategories: Array<string>;
+  question: string;
 
   constructor(private wordService: WordService,
               private categoryService: CategoryService,
@@ -23,6 +24,7 @@ export class CategoriesPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.question = 'בחר קטגוריה ראשית';
     this.arrayOfCategories = [];
     this.isLoading = true;
     this.currentCategories = await this.categoryService.getMainCategories();
@@ -33,6 +35,7 @@ export class CategoriesPage implements OnInit {
   async goSubCategories(category: Category) {
     this.arrayOfCategories.push(category.id);
     if (category.subCategories?.length > 0) {
+      this.question = category.subQuestion;
       this.isLoading = true;
       this.currentCategories = await this.categoryService.getByUids(category.subCategories);
       this.isLoading = false;

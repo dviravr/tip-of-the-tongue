@@ -15,8 +15,9 @@
   <ion-grid class="h-100">
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
     <ion-row *ngIf="!isLoading">
+      <h2 class="font-weight-bold text-center" >בחר את המילה אותה חיפשת</h2>
       <ion-col class="text-center col-12" *ngFor="let word of finalWord">
-        <ion-button (click)="findWord(word)" class="w-75">
+        <ion-button (click)="chooseWord(word)" class="w-75">
           {{word.word}}
         </ion-button>
       </ion-col>
@@ -26,26 +27,12 @@
 
 </ion-content>
 
-<ion-card>
-  <ion-card-header>
-    <ion-card-title> לצערנו לא הצלחנו להגיע למילה המבוקשת</ion-card-title>
-    <ion-card-subtitle> מה תרצו לעשות עכשיו?</ion-card-subtitle>
-  </ion-card-header>
-
-  <ion-card-content>
-    <ion-grid class="mh-100">
-      <ion-row>
-        <ion-col class="text-center col-6">
-          <ion-button class="w-75">
-            בואו ננסה למצוא אותה שוב.
-          </ion-button>
-        </ion-col>
-        <ion-col class="text-center col-6">
-          <ion-button class="w-75">
-            עזבו לא משנה. נמשיך את זה בפעם אחרת.
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-card-content>
-</ion-card>
+  <ion-footer>
+    <ion-toolbar>
+      <div class="d-flex justify-content-center w-100">
+        <ion-button class="w-50" color="danger" fill="outline" (click)="presentActionSheet()">
+          המילה שחיפשתי לא מופיעה
+        </ion-button>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
