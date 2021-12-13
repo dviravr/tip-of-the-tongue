@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User as FirebaseUser } from 'firebase/app';
 import { forkJoin, from, Observable, of } from 'rxjs';
-import { mergeMap, switchMap } from 'rxjs/operators';
+import { mergeMap, switchMap, take } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
-import { User } from '../../models/user.model';
+import { FirestoreUser, User } from '../../models/user.model';
 import { NavController } from '@ionic/angular';
 
 @Injectable({
@@ -32,7 +32,7 @@ export class AuthService {
     );
   }
 
-  registerNewUser(firebaseUser: FirebaseUser, user: User) {
+  registerNewUser(firebaseUser: FirebaseUser, user: FirestoreUser) {
     this.loggedInUser$ = forkJoin([of(firebaseUser), this.userService.create(user, firebaseUser.uid)]);
   }
 
@@ -52,5 +52,13 @@ export class AuthService {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
     await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+  }
+
+  updateLoggedInUser() {
+    this.loggedInUser$ = this.loggedInUser$.pipe(
+      mergeMap(([firebaseUser, user]) => forkJoin([
+        of(firebaseUser),
+        from(this.userService.getByUid(user.id))
+      ])));
   }
 }

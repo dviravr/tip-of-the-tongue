@@ -16,7 +16,7 @@
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
     <ion-row *ngIf="!isLoading">
       <ion-col class="text-center col-12" *ngFor="let word of finalWord">
-        <ion-button class="w-75">
+        <ion-button (click)="findWord(word)" class="w-75">
           {{word.word}}
         </ion-button>
       </ion-col>

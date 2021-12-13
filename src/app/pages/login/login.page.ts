@@ -1,11 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { NavController } from '@ionic/angular';
 import { UserService } from '../../core/services/user/user.service';
-import { Subscription } from 'rxjs';
 import { UserTypeEnum } from '../../core/enum/userType.enum';
-import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +27,7 @@ export class LoginPage implements OnInit {
   passwordVisible: boolean;
   isRegistration: boolean;
   rememberMe: boolean;
+  errorMessage: string;
 
   constructor(private authService: AuthService,
               private userService: UserService,
@@ -58,16 +57,30 @@ export class LoginPage implements OnInit {
       if (this.isRegistration) {
         this.authService.signupWithEmail(email, password, this.rememberMe).then(() => {
           this.goToFirstLogin();
+        }).catch((error) => {
+          this.handelErrors(error);
         });
       } else {
-        this.authService.loginUserWithEmail(email, password, this.rememberMe).pipe(take(1)).subscribe((user) => {
+        this.authService.loginUserWithEmail(email, password, this.rememberMe).toPromise().then((user) => {
           if (user) {
             this.goToHome(user.userType);
           } else {
             this.goToFirstLogin();
           }
+        }).catch((error) => {
+          this.handelErrors(error);
         });
       }
+    }
+  }
+
+  handelErrors(error) {
+    if (error.code === 'auth/email-already-in-use') {
+      this.errorMessage = 'מייל זה נמצא בשימוש';
+    } else if (error.code === 'auth/user-not-found') {
+      this.errorMessage = 'משתמש לא רשום, אנא עבור להרשמה';
+    } else {
+      this.errorMessage = 'התרחשה שגיאה לא צפויה';
     }
   }
 

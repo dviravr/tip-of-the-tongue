@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserTypeEnum } from '../../core/enum/userType.enum';
 import { Router } from '@angular/router';
 import { UserService } from '../../core/services/user/user.service';
-import { User } from '../../core/models/user.model';
+import { FirestoreUser } from '../../core/models/user.model';
 import { NavController } from '@ionic/angular';
 import { AuthService } from '../../core/services/auth/auth.service';
 import { User as FirebaseUser } from 'firebase/app';
@@ -77,14 +77,14 @@ export class FirstLoginPage implements OnInit {
 
   async registerUser() {
     const { firstName, lastName, phoneNumber, email, birthDate } = this.registerForm.value;
-    const user: User = {
+    const user: FirestoreUser = {
       userType: this.userType,
       email,
       firstName,
       lastName,
       birthDate,
       phoneNumber
-    } as User;
+    } as FirestoreUser;
     await this.authService.registerNewUser(this.firebaseUser, user);
     this.navController.navigateRoot(user.userType, { animationDirection: 'forward' });
   }
