@@ -66,6 +66,4 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
     };
     this.create(report);
   }
-
-
 }
