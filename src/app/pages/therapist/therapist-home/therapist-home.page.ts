@@ -59,4 +59,8 @@ export class TherapistHomePage implements OnInit {
       }
     })
   }
+
+  openMyPatientsModal() {
+
+  }
 }

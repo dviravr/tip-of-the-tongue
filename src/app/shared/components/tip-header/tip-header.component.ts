@@ -26,6 +26,6 @@ export class TipHeaderComponent implements OnInit {
   }
 
   goHome() {
-    this.navController.navigateBack(`/${this.loggedInUser.userType}/home`);
+    this.navController.navigateRoot(`/${this.loggedInUser.userType}/home`);
   }
 }
