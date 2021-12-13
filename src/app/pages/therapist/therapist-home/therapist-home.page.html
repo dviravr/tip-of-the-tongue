@@ -1,11 +1,26 @@
 <app-tip-header [headerText]="'therapist-home'"></app-tip-header>
 
 <ion-content>
-  <ion-item>
-    <ion-button (click)="sendLinkToPatient()">
-      הוסף מטופל
-    </ion-button>
-  </ion-item>
+  <ion-grid>
+    <ion-row class="ion-justify-content-center">
+      <ion-col size="11" size-md="11" size-lg="11" size-xl="11">
+        <ion-card class="ripple-parent ion-activatable" (click)="sendLinkToPatient()">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-card-header class="text-center" style="font-size: large">
+            הוסף מטופל
+            <i class="fas fa-user-plus"></i>
+          </ion-card-header>
+        </ion-card>
+        <ion-card class="ripple-parent ion-activatable" (click)="openMyPatientsModal()">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-card-header class="text-center" style="font-size: large">
+            המטופלים שלי
+            <i class="fas fa-users"></i>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
 
 <ion-footer>
