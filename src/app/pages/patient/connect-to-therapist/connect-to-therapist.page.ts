@@ -4,6 +4,7 @@ import { UserService } from '../../../core/services/user/user.service';
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { take } from 'rxjs/operators';
+import { AlertController, NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-connect-to-therapist',
@@ -18,6 +19,8 @@ export class ConnectToTherapistPage implements OnInit {
 
   constructor(private activatedRoute: ActivatedRoute,
               private userService: UserService,
+              private navController: NavController,
+              private alertController: AlertController,
               private authService: AuthService) { }
 
   async ngOnInit() {
@@ -34,5 +37,24 @@ export class ConnectToTherapistPage implements OnInit {
 
   async connectToTherapist() {
     await this.userService.connectToTherapist(this.therapist, this.loggedInUser);
+    await this.presentAlertConfirm();
+  }
+
+  async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      cssClass: 'text-center',
+      mode:'ios',
+      header: 'התחברת למטפל בהצלחה!',
+      buttons: [
+        {
+          text: 'חזור לדף הבית',
+          handler: () => {
+            this.navController.navigateRoot('/patient/home');
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }
