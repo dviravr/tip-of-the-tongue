@@ -61,15 +61,10 @@ export class LoginPage implements OnInit {
           this.handelErrors(error);
         });
       } else {
-        this.authService.loginUserWithEmail(email, password, this.rememberMe).then((user) => {
-          if (user) {
-            this.goToHome(user.userType);
-          } else {
-            this.goToFirstLogin();
-          }
-        }).catch((error) => {
+        await this.authService.loginUserWithEmail(email, password, this.rememberMe).catch((error) => {
           this.handelErrors(error);
         });
+        await this.goToHome(UserTypeEnum.patient);
       }
     }
   }

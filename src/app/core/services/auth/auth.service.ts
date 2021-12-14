@@ -28,10 +28,8 @@ export class AuthService {
   async loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
-    return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(async (userCredential: auth.UserCredential) => {
-      await this.loginUser(userCredential.user);
-      return this.loggedInUser$.toPromise();
-    });
+    let userCredential: auth.UserCredential = await this.angularFireAuth.signInWithEmailAndPassword(email, password);
+    this.loginUser(userCredential.user);
   }
 
   registerNewUser(firebaseUser: FirebaseUser, newUser: FirestoreUser) {
@@ -40,8 +38,8 @@ export class AuthService {
     });
   }
 
-  async loginUser(newFirebaseUser: FirebaseUser) {
-    this.loggedInUser$ = this.userService.subscribeById(newFirebaseUser.uid);
+  loginUser(newFirebaseUser: FirebaseUser) {
+    this.loggedInUser$ = this.userService.subscribeById(newFirebaseUser.uid)
   }
 
   async logoutUser() {
@@ -55,13 +53,5 @@ export class AuthService {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
     await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
-  }
-
-  updateLoggedInUser() {
-    // this.loggedInUser$ = this.loggedInUser$.pipe(
-    //   mergeMap(([firebaseUser, user]) => forkJoin([
-    //     of(firebaseUser),
-    //     from(this.userService.getByUid(user.id))
-    //   ])));
   }
 }

@@ -14,12 +14,14 @@
 <ion-content [fullscreen]="true" [scrollY]="false">
   <ion-grid class="h-100">
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
-    <ion-row *ngIf="!isLoading">
-      <h2 class="font-weight-bold text-center" >בחר את המילה אותה חיפשת</h2>
-      <ion-col class="text-center col-12" *ngFor="let word of finalWord">
-        <ion-button (click)="chooseWord(word)" class="w-75">
-          {{word.word}}
-        </ion-button>
+    <ion-row *ngIf="!isLoading && finalWord?.length > 0" class="ion-justify-content-center">
+      <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
+        <h2 class="font-weight-bold">בחר את המילה אותה חיפשת</h2>
+        <div *ngFor="let word of finalWord">
+          <ion-button mode="ios" (click)="chooseWord(word)" class="w-75">
+            {{word.word}}
+          </ion-button>
+        </div>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -29,10 +31,13 @@
 
   <ion-footer>
     <ion-toolbar>
-      <div class="d-flex justify-content-center w-100">
-        <ion-button class="w-50" color="danger" fill="outline" (click)="presentActionSheet()">
-          המילה שחיפשתי לא מופיעה
-        </ion-button>
-      </div>
+      <ion-row class="ion-justify-content-center">
+        <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
+          <ion-button mode="ios" size="11" size-xl="4"
+                      class="w-75" color="danger" fill="outline" (click)="presentActionSheet()">
+            המילה שחיפשתי לא מופיעה
+          </ion-button>
+        </ion-col>
+      </ion-row>
     </ion-toolbar>
   </ion-footer>

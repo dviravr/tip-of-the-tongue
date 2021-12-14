@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 import { AngularFireModule } from '@angular/fire';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,7 +25,8 @@ import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    { provide: MAT_DATE_LOCALE, useValue: 'he-IL' }
+    { provide: MAT_DATE_LOCALE, useValue: 'he-IL' },
+    Vibration
   ],
   bootstrap: [AppComponent]
 })
