@@ -64,7 +64,7 @@ export class FirstLoginPage implements OnInit {
         Validators.required
       ])
     });
-    this.authService.loggedInUser$.pipe(take(1)).subscribe(([firebaseUser, user]) => {
+    this.authService.firebaseUser$.pipe(take(1)).subscribe((firebaseUser) => {
       this.firebaseUser = firebaseUser;
       this.registerForm.get('email').setValue(firebaseUser.email);
     });

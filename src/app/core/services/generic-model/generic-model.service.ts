@@ -8,6 +8,7 @@ import {
   QuerySnapshot
 } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+import { Observable } from 'rxjs';
 
 export abstract class GenericModelService<T extends BaseModel, S> {
   protected collection: AngularFirestoreCollection<S>;
@@ -17,6 +18,14 @@ export abstract class GenericModelService<T extends BaseModel, S> {
 
   protected constructor(protected angularFirestore: AngularFirestore, collectionName: string) {
     this.collection = angularFirestore.collection<S>(collectionName);
+  }
+
+  subscribeById(id: string): Observable<T> {
+    return new Observable<T>(observer => {
+      this.collection.doc(id).snapshotChanges().subscribe(res => {
+        observer.next(this.mapModelToClient(res.payload) as T);
+      });
+    });
   }
 
   // return document by uid

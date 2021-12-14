@@ -13,15 +13,15 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size="11" size-md="7" size-lg="6" size-xl="4">
-        <div class="profile-image">
+        <div class="profile-image" *ngIf="!isLoading">
           <div class="d-flex justify-content-center">
-            <img src="../../../../assets/icon/profile.svg" class="w-75">
+            <img src="{{profilePicture}}" class="w-75" *ngIf="!isLoadingPicture">
           </div>
           <div class="d-flex flex-row">
-            <ion-fab-button class="icon-container" (click)="openCamera()">
+            <ion-fab-button class="icon-container" (click)="getPicture(cameraSource.Camera)">
               <ion-icon name="camera-outline"></ion-icon>
             </ion-fab-button>
-            <ion-fab-button class="icon-container" >
+            <ion-fab-button class="icon-container" (click)="getPicture(cameraSource.Photos)">
               <ion-icon name="image-outline"></ion-icon>
             </ion-fab-button>
           </div>

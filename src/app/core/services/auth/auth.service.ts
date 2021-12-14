@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { auth, User as FirebaseUser } from 'firebase/app';
-import { forkJoin, from, Observable, of } from 'rxjs';
-import { mergeMap, switchMap, take } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { mergeMap } from 'rxjs/operators';
 import { UserService } from '../user/user.service';
 import { FirestoreUser, User } from '../../models/user.model';
 import { NavController } from '@ionic/angular';
@@ -12,39 +12,42 @@ import { NavController } from '@ionic/angular';
 })
 export class AuthService {
 
-  loggedInUser$: Observable<[FirebaseUser, User]>;
+  loggedInUser$: Observable<User>;
+  firebaseUser$: Observable<FirebaseUser>
 
   constructor(private angularFireAuth: AngularFireAuth,
               private navController: NavController,
               private userService: UserService) {
-    this.loggedInUser$ = angularFireAuth.authState.pipe(
-      mergeMap((firebaseUser) => forkJoin([
-        of(firebaseUser),
-        from(firebaseUser ? this.userService.getByUid(firebaseUser.uid) : of(null))
-      ])));
+    this.firebaseUser$ = angularFireAuth.authState.pipe(
+      mergeMap( (firebaseUser) => {
+        this.loggedInUser$ = firebaseUser ? this.userService.subscribeById(firebaseUser.uid) : of(null);
+        return of(firebaseUser);
+      }));
   }
 
-  loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
+  async loginUserWithEmail(email: string, password: string, rememberMe: boolean) {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
-    return from(this.angularFireAuth.setPersistence(persistence)).pipe(
-      switchMap(() => this.angularFireAuth.signInWithEmailAndPassword(email, password)),
-      switchMap(async (userCredential: auth.UserCredential) => this.loginUser(userCredential.user))
-    );
+    await this.angularFireAuth.setPersistence(persistence);
+    return this.angularFireAuth.signInWithEmailAndPassword(email, password).then(async (userCredential: auth.UserCredential) => {
+      await this.loginUser(userCredential.user);
+      return this.loggedInUser$.toPromise();
+    });
   }
 
-  registerNewUser(firebaseUser: FirebaseUser, user: FirestoreUser) {
-    this.loggedInUser$ = forkJoin([of(firebaseUser), this.userService.create(user, firebaseUser.uid)]);
+  registerNewUser(firebaseUser: FirebaseUser, newUser: FirestoreUser) {
+    this.userService.create(newUser, firebaseUser.uid).then(user => {
+      this.loggedInUser$ = this.userService.subscribeById(user.id);
+    });
   }
 
   async loginUser(newFirebaseUser: FirebaseUser) {
-    const user = await this.userService.getByUid(newFirebaseUser.uid);
-    this.loggedInUser$ = forkJoin([of(newFirebaseUser), of(user)]);
-    return user;
+    this.loggedInUser$ = this.userService.subscribeById(newFirebaseUser.uid);
   }
 
   async logoutUser() {
     await this.angularFireAuth.signOut();
-    this.loggedInUser$ = forkJoin([of(null), of(null)]);
+    this.loggedInUser$ = of(null);
+    this.firebaseUser$ = of(null);
     this.navController.navigateRoot('login');
   }
 
@@ -55,10 +58,10 @@ export class AuthService {
   }
 
   updateLoggedInUser() {
-    this.loggedInUser$ = this.loggedInUser$.pipe(
-      mergeMap(([firebaseUser, user]) => forkJoin([
-        of(firebaseUser),
-        from(this.userService.getByUid(user.id))
-      ])));
+    // this.loggedInUser$ = this.loggedInUser$.pipe(
+    //   mergeMap(([firebaseUser, user]) => forkJoin([
+    //     of(firebaseUser),
+    //     from(this.userService.getByUid(user.id))
+    //   ])));
   }
 }

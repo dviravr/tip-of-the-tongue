@@ -61,7 +61,7 @@ export class LoginPage implements OnInit {
           this.handelErrors(error);
         });
       } else {
-        this.authService.loginUserWithEmail(email, password, this.rememberMe).toPromise().then((user) => {
+        this.authService.loginUserWithEmail(email, password, this.rememberMe).then((user) => {
           if (user) {
             this.goToHome(user.userType);
           } else {

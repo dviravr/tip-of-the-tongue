@@ -20,7 +20,7 @@ export class TipHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.authService.loggedInUser$.pipe(take(1)).subscribe(([firebaseUser, user]) => {
+    this.authService.loggedInUser$.pipe(take(1)).subscribe((user) => {
       this.loggedInUser = user;
     });
   }

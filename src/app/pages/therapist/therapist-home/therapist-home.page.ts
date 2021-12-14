@@ -25,7 +25,7 @@ export class TherapistHomePage implements OnInit {
   }
 
   async sendLinkToPatient() {
-    this.authService.loggedInUser$.pipe(take(1)).subscribe(async ([firebaseUser, user]) => {
+    this.authService.loggedInUser$.pipe(take(1)).subscribe(async (user) => {
       const link = `localhost:8100/patient/connect-to-therapist/${ user.id }`;
       const result = await Swal.fire({
         title: 'שלח קישור למטופל',

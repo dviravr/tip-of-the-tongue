@@ -12,6 +12,7 @@ export interface User extends BaseModel {
   birthDate: Date;
   therapistId?: string;
   patientsIds?: Array<string>;
+  profilePicture: string;
   createDate: Date;
   updateDate: Date;
 }
@@ -25,6 +26,7 @@ export interface FirestoreUser {
   birthDate?: Date | firebase.firestore.Timestamp;
   therapistRef?: DocumentReference;
   patientsRefs?: Array<DocumentReference>;
+  profilePicture: string;
   createDate: Date | firebase.firestore.Timestamp;
   updateDate: Date | firebase.firestore.Timestamp;
 }

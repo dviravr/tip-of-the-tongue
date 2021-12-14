@@ -22,7 +22,7 @@ export class ConnectToTherapistPage implements OnInit {
 
   async ngOnInit() {
     this.isLoading = true;
-    this.authService.loggedInUser$.pipe(take(1)).subscribe(async ([firebaseUser, user]) => {
+    this.authService.loggedInUser$.pipe(take(1)).subscribe(async (user) => {
       this.loggedInUser = user;
       let therapistId = this.activatedRoute.snapshot.params.therapistId;
       if (therapistId) {
