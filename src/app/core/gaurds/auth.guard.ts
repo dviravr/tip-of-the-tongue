@@ -2,8 +2,9 @@ import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTr
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth/auth.service';
-import { map, take } from 'rxjs/operators';
+import { switchMap, take } from 'rxjs/operators';
 import { UserTypeEnum } from '../enum/userType.enum';
+import { UserService } from '../services/user/user.service';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ import { UserTypeEnum } from '../enum/userType.enum';
 export class AuthGuard implements CanActivate {
 
   constructor(private router: Router,
+              private userService: UserService,
               private authService: AuthService) {
   }
 
@@ -19,22 +21,25 @@ export class AuthGuard implements CanActivate {
 
     const requiredUserType = route.data.requiredUserType as UserTypeEnum;
 
-    return this.authService.loggedInUser$.pipe(
+    return this.authService.firebaseUser$.pipe(
       take(1),
-      map(([firebaseUser, loggedInUser]) => {
-        if (firebaseUser && !loggedInUser) {
-          return this.router.createUrlTree(['first-login']);
-        } else if (firebaseUser && loggedInUser) {
-          if (requiredUserType === loggedInUser.userType) {
-            return true;
+      switchMap(async (firebaseUser) => {
+        if (firebaseUser) {
+          const loggedInUser = await this.userService.getByUid(firebaseUser.uid);
+          if (loggedInUser) {
+            if (requiredUserType === loggedInUser.userType) {
+              return true;
+            }
+            return this.router.createUrlTree([`${loggedInUser.userType}`]);
+          } else {
+            return this.router.createUrlTree(['first-login']);
           }
-          return this.router.createUrlTree([`${loggedInUser.userType}`]);
         }
         if (!requiredUserType) {
           return true;
         }
         return this.router.createUrlTree(['login']);
       })
-    );
+    )
   }
 }
