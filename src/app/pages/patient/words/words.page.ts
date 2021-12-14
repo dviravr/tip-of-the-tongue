@@ -7,8 +7,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import { User } from '../../../core/models/user.model';
 import { ActionSheetController, NavController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
-
-// import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
+import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
 
 @Component({
   selector: 'app-words',
@@ -24,6 +23,7 @@ export class WordsPage implements OnInit {
 
   constructor(private wordService: WordService,
               private router: Router,
+              private vibration : Vibration,
               private authService: AuthService,
               private reportService: ReportService,
               private actionSheetController: ActionSheetController,
@@ -46,7 +46,7 @@ export class WordsPage implements OnInit {
   }
 
   async chooseWord(word: Word) {
-    // this.vibration.vibrate(500);
+    this.vibration.vibrate(50);
     await this.presentAlertConfirm();
     const loggedInUser: User = (await this.authService.loggedInUser$.toPromise())[1];
     this.reportService.endTime = new Date();

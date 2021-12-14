@@ -4,13 +4,13 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size="11" size-md="7" size-lg="6" size-xl="4">
-        <ion-card class="ripple-parent ion-activatable" (click)="openMyProfile()">
+        <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="openMyProfile()">
           <ion-ripple-effect></ion-ripple-effect>
           <ion-card-header class="text-center" style="font-size: large">
             הפרופיל שלי
           </ion-card-header>
         </ion-card>
-        <ion-card class="ripple-parent ion-activatable" (click)="goToMainCategories()">
+        <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="goToMainCategories()">
           <ion-ripple-effect></ion-ripple-effect>
           <ion-card-header class="text-center" style="font-size: large">
             התחל
@@ -23,10 +23,12 @@
 
 <ion-footer>
   <ion-toolbar>
-    <div class="d-flex justify-content-center w-100">
-      <ion-button class="w-50" color="danger" fill="outline" (click)="logout()">
-        התנתק
-      </ion-button>
-    </div>
+    <ion-row class="ion-justify-content-center">
+      <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
+        <ion-button mode="ios" class="w-50" color="danger" fill="outline" (click)="logout()">
+          התנתק
+        </ion-button>
+      </ion-col>
+    </ion-row>
   </ion-toolbar>
 </ion-footer>

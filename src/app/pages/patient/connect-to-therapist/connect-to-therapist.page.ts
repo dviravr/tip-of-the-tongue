@@ -34,6 +34,5 @@ export class ConnectToTherapistPage implements OnInit {
 
   async connectToTherapist() {
     await this.userService.connectToTherapist(this.therapist, this.loggedInUser);
-    await this.authService.updateLoggedInUser();
   }
 }

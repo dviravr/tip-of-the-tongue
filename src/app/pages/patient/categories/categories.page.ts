@@ -4,6 +4,7 @@ import { WordService } from '../../../core/services/word/word.service';
 import { CategoryService } from '../../../core/services/category/category.service';
 import { NavController } from '@ionic/angular';
 import { ReportService } from '../../../core/services/report/report.service';
+import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
 
 @Component({
   selector: 'app-categories',
@@ -18,6 +19,7 @@ export class CategoriesPage implements OnInit {
   question: string;
 
   constructor(private wordService: WordService,
+              private vibration : Vibration,
               private categoryService: CategoryService,
               private navController: NavController,
               private reportService: ReportService) {
@@ -33,6 +35,7 @@ export class CategoriesPage implements OnInit {
   }
 
   async goSubCategories(category: Category) {
+    this.vibration.vibrate(50);
     this.arrayOfCategories.push(category.id);
     if (category.subCategories?.length > 0) {
       this.question = category.subQuestion;
