@@ -10,11 +10,11 @@ const routes: Routes = [
   {
     path: 'home',
     loadChildren: () => import('./therapist-home/therapist-home.module').then( m => m.TherapistHomePageModule)
-  },  {
-    path: 'my-patient',
-    loadChildren: () => import('./my-patient/my-patient.module').then( m => m.MyPatientPageModule)
-  }
-
+  },
+  {
+    path: 'my-patients',
+    loadChildren: () => import('./my-patients/my-patients.module').then( m => m.MyPatientsPageModule)
+  },
 ];
 
 @NgModule({

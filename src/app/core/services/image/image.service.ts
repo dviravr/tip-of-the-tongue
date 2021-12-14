@@ -17,7 +17,7 @@ export class ImageService {
   async getPicture(source: CameraSource) {
     const capturedPhoto = await Camera.getPhoto({
       resultType: CameraResultType.DataUrl,
-      source: source,
+      source,
       quality: 40,
       allowEditing: true
     });
@@ -25,12 +25,10 @@ export class ImageService {
   }
 
   saveImageToStorage(fileData: string, folderName: CollectionEnum | string): Promise<storage.UploadTaskSnapshot> {
-    return fetch(fileData).then((res) => {
-      return res.blob().then((fileBlob) => {
+    return fetch(fileData).then((res) => res.blob().then((fileBlob) => {
         const randomId = Math.random().toString(36).substring(2, 8);
         return this.angularFireStorage.upload(`${folderName}/${new Date().getTime()}_${randomId}`, fileBlob);
-      });
-    });
+      }));
   }
 
   async getImageFromStorage(imagePath: string) {

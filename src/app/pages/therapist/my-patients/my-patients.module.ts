@@ -7,7 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { MyPatientsPageRoutingModule } from './my-patients-routing.module';
 
 import { MyPatientsPage } from './my-patients.page';
-import { TherapistPageRoutingModule } from "../../../shared/shared.module";
+import { TherapistPageRoutingModule } from '../../../shared/shared.module';
 
 @NgModule({
   imports: [

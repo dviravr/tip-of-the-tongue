@@ -3,7 +3,7 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { take } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-therapist-home',
@@ -14,7 +14,8 @@ export class TherapistHomePage implements OnInit {
 
   constructor(private authService: AuthService,
               private toastController: ToastController,
-              private clipboard: Clipboard) {
+              private clipboard: Clipboard,
+              private navController: NavController) {
   }
 
   ngOnInit() {
@@ -40,13 +41,6 @@ export class TherapistHomePage implements OnInit {
       });
 
       if (result.isConfirmed) {
-        // let inviteMessage;
-        // if (this.business.inviteToBusinessDynamicLink) {
-        //   inviteMessage = 'היי, ' + this.business.name + ' מחכה לך באפליקציית Dibs לקביעת תורים בקלות ובמהירות! הצטרפו בלחיצה על הלינק הבא: '
-        //     + this.business.inviteToBusinessDynamicLink;
-        // } else {
-        //   inviteMessage = 'היי, ' + this.business.name + ' מחכה לך באפליקציית Dibs לקביעת תורים בקלות ובמהירות! הצטרפו בלחיצה על הלינק הבא: http://onelink.to/wc49a3';
-        // }
         window.open(`https://wa.me/?text=${link}`);
       } else if (result.isDenied) {
         this.clipboard.copy(link);
@@ -57,10 +51,10 @@ export class TherapistHomePage implements OnInit {
           color: 'medium'
         })).present();
       }
-    })
+    });
   }
 
-  openMyPatientsModal() {
-
+  openMyPatients() {
+    this.navController.navigateForward('therapist/my-patients');
   }
 }

@@ -21,7 +21,7 @@ export class UserService extends GenericModelService<User, FirestoreUser> {
       data.id = doc.id;
       data.birthDate = data.birthDate.toDate();
       if (data.patientsRefs) {
-        data.patients = data.patientsRefs.map(patientRef => patientRef.id);
+        data.patientsIds = data.patientsRefs.map(patientRef => patientRef.id);
       }
       if (data.therapistRef) {
         data.therapistId = data.therapistRef.id;
@@ -37,7 +37,7 @@ export class UserService extends GenericModelService<User, FirestoreUser> {
       const therapistRef = await this.getReferenceByUid(therapist.id);
       await this.update(patient.id, { therapistRef });
       const patientRef = await this.getReferenceByUid(patient.id);
-      let newPatientsRefs = await this.getReferencesByUids(therapist.patientsIds ? therapist.patientsIds : []);
+      const newPatientsRefs = await this.getReferencesByUids(therapist.patientsIds ? therapist.patientsIds : []);
       if (!newPatientsRefs.includes(patientRef)) {
         newPatientsRefs.push(patientRef);
       }
