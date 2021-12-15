@@ -39,6 +39,7 @@ export class AuthService {
   }
 
   loginUser(newFirebaseUser: FirebaseUser) {
+    this.firebaseUser$ = of(newFirebaseUser);
     this.loggedInUser$ = this.userService.subscribeById(newFirebaseUser.uid);
   }
 
@@ -52,6 +53,7 @@ export class AuthService {
   async signupWithEmail(email: string, password: string, rememberMe: boolean) {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
-    await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+    const userCredential: auth.UserCredential = await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+    this.firebaseUser$ = of(userCredential.user);
   }
 }

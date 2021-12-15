@@ -64,7 +64,7 @@ export class LoginPage implements OnInit {
         await this.authService.loginUserWithEmail(email, password, this.rememberMe).catch((error) => {
           this.handelErrors(error);
         });
-        await this.goToHome(UserTypeEnum.patient);
+        this.goToHome(UserTypeEnum.patient);
       }
     }
   }
@@ -84,6 +84,6 @@ export class LoginPage implements OnInit {
   }
 
   goToHome(userType: UserTypeEnum) {
-    this.navController.navigateRoot(userType, { animationDirection: 'forward' });
+    this.navController.navigateForward(userType);
   }
 }
