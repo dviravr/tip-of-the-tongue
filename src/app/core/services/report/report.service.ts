@@ -37,8 +37,8 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
     }
   }
 
-  async getReport(user: User): Promise<Map<Word, { counter: number; avgTime: number }>> {
-    const reports: Array<ReportSearch> = await Promise.all(await this.getAllReportsFromFirebase(user.id));
+  async getReport(userId: string): Promise<Map<Word, { counter: number; avgTime: number }>> {
+    const reports: Array<ReportSearch> = await Promise.all(await this.getAllReportsFromFirebase(userId));
     const reportMap: Map<Word, { counter: number; avgTime: number }> = new Map();
     reports.forEach(report => {
       const word = reportMap.get(report.word);
@@ -52,9 +52,19 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
     return reportMap;
   }
 
+  async getShortReport(userId: string) {
+    const reports: Array<ReportSearch> = await Promise.all(await this.getAllReportsFromFirebase(userId));
+    let totTime = 0;
+    reports.forEach(report => {
+      totTime += report.searchTime;
+    });
+    const avgTime = totTime / reports.length;
+    return { wordsCounter: reports.length, avgTime: avgTime };
+  }
+
   async getAllReportsFromFirebase(userId: string) {
     const userRef = await this.getReferenceByUid(userId);
-    const query = this.collection.ref.where('patientRef', '==', userRef.id);
+    const query = this.collection.ref.where('patientRef', '==', userRef);
     return query.get().then(res => res.docs.map(report => this.mapModelToClient(report)));
   }
 
