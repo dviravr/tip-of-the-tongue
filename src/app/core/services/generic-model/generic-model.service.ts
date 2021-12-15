@@ -1,4 +1,3 @@
-import { BaseModel } from '../../models/base.model';
 import {
   AngularFirestoreCollection,
   AngularFirestore,
@@ -10,7 +9,7 @@ import {
 import * as firebase from 'firebase/app';
 import { Observable } from 'rxjs';
 
-export abstract class GenericModelService<T extends BaseModel, S> {
+export abstract class GenericModelService<T, S> {
   protected collection: AngularFirestoreCollection<S>;
   private cachedRefs: {
     [key: string]: DocumentReference<S>;

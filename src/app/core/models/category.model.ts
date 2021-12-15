@@ -1,7 +1,5 @@
-import { BaseModel } from './base.model';
-
-export interface Category extends BaseModel {
-  word: any;
+export interface Category {
+  id: string;
   categoryName: string;
   subCategories: Array<string>;
   isMainCategory: boolean;

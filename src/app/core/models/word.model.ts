@@ -1,7 +1,7 @@
-import { BaseModel } from './base.model';
 import { DocumentReference } from '@angular/fire/firestore';
 
-export interface Word extends BaseModel {
+export interface Word {
+  id: string;
   word: string;
   categoriesIds: Array<string>;
   patientId?: string;
