@@ -16,7 +16,7 @@
         <ion-spinner *ngIf="isLoading"></ion-spinner>
         <div class="profile-image" *ngIf="!isLoading">
           <div class="d-flex justify-content-center">
-            <img src="{{profilePicture}}" class="w-75" *ngIf="!isLoadingPicture" alt="אין תמונת פרופיל">
+            <img src="{{profilePicture}}" class="w-75" *ngIf="!isLoadingPicture">
           </div>
           <ion-spinner style="position:inherit; transform: scale(1.5)" *ngIf="isLoadingPicture"></ion-spinner>
           <div class="d-flex flex-row">
