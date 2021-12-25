@@ -1,6 +1,6 @@
 <app-tip-header [headerText]="'קטגוריות'"></app-tip-header>
 
-<ion-content [fullscreen]="true" [scrollY]="false">
+<ion-content [dir]="'rtl'">
   <ion-grid class="h-100">
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
     <ion-row *ngIf="!isLoading && currentCategories?.length > 0" class="ion-justify-content-center">
