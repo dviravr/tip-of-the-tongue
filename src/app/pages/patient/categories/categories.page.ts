@@ -52,4 +52,16 @@ export class CategoriesPage implements OnInit {
       });
     }
   }
+
+  async prevCategory() {
+    this.isLoading = true;
+    this.arrayOfCategories.pop();
+    if (this.arrayOfCategories.length === 0) {
+      this.currentCategories = await this.categoryService.getMainCategories();
+    } else {
+      let lastCategory = await this.categoryService.getByUid(this.arrayOfCategories[this.arrayOfCategories.length - 1]);
+      this.currentCategories = await this.categoryService.getByUids(lastCategory.subCategories);
+    }
+    this.isLoading = false;
+  }
 }
