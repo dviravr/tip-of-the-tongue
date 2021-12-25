@@ -29,17 +29,14 @@ export class AuthService {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
     const userCredential: auth.UserCredential = await this.angularFireAuth.signInWithEmailAndPassword(email, password);
-    this.loginUser(userCredential.user);
+    this.firebaseUser$ = of(userCredential.user);
+    this.loggedInUser$ = this.userService.subscribeById(userCredential.user.uid);
   }
 
   registerNewUser(firebaseUser: FirebaseUser, newUser: FirestoreUser) {
     this.userService.create(newUser, firebaseUser.uid).then(user => {
       this.loggedInUser$ = this.userService.subscribeById(user.id);
     });
-  }
-
-  loginUser(newFirebaseUser: FirebaseUser) {
-    this.loggedInUser$ = this.userService.subscribeById(newFirebaseUser.uid);
   }
 
   async logoutUser() {
@@ -52,6 +49,7 @@ export class AuthService {
   async signupWithEmail(email: string, password: string, rememberMe: boolean) {
     const persistence = rememberMe ? auth.Auth.Persistence.LOCAL : auth.Auth.Persistence.NONE;
     await this.angularFireAuth.setPersistence(persistence);
-    await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+    const userCredential: auth.UserCredential = await this.angularFireAuth.createUserWithEmailAndPassword(email, password);
+    this.firebaseUser$ = of(userCredential.user);
   }
 }

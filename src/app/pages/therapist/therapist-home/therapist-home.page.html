@@ -4,6 +4,12 @@
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size="11" size-md="7" size-lg="6" size-xl="4">
+        <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="openMyProfile()">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-card-header class="text-center" style="font-size: large">
+            הפרופיל שלי
+          </ion-card-header>
+        </ion-card>
         <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="sendLinkToPatient()">
           <ion-ripple-effect></ion-ripple-effect>
           <ion-card-header class="text-center" style="font-size: large">

@@ -3,7 +3,8 @@ import { AuthService } from '../../../core/services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { take } from 'rxjs/operators';
 import { Clipboard } from '@angular/cdk/clipboard';
-import { NavController, ToastController } from '@ionic/angular';
+import { IonRouterOutlet, ModalController, NavController, ToastController } from '@ionic/angular';
+import { ProfileComponent } from '../../../shared/components/profile/profile.component';
 
 @Component({
   selector: 'app-therapist-home',
@@ -15,6 +16,8 @@ export class TherapistHomePage implements OnInit {
   constructor(private authService: AuthService,
               private toastController: ToastController,
               private clipboard: Clipboard,
+              private routerOutlet: IonRouterOutlet,
+              private modalController: ModalController,
               private navController: NavController) {
   }
 
@@ -52,6 +55,16 @@ export class TherapistHomePage implements OnInit {
         })).present();
       }
     });
+  }
+
+  async openMyProfile() {
+    const modal = await this.modalController.create({
+      component: ProfileComponent,
+      cssClass: 'my-custom-class',
+      swipeToClose: true,
+      presentingElement: this.routerOutlet.nativeEl
+    });
+    return await modal.present();
   }
 
   openMyPatients() {

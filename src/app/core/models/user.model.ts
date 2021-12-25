@@ -1,9 +1,9 @@
-import { BaseModel } from './base.model';
 import * as firebase from 'firebase';
 import { DocumentReference } from '@angular/fire/firestore';
 import { UserTypeEnum } from '../enum/userType.enum';
 
-export interface User extends BaseModel {
+export interface User {
+  id: string;
   userType: UserTypeEnum;
   firstName: string;
   lastName: string;

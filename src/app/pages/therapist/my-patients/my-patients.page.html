@@ -4,14 +4,15 @@
 <ion-content>
   <ion-grid style="direction: rtl;">
     <ion-row class="ion-justify-content-center">
-      <ion-col size="11" size-md="7" size-lg="6" size-xl="4">
+      <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+      <ion-col *ngIf="!isLoading" size="11" size-md="7" size-lg="6" size-xl="4">
         <ion-item *ngFor="let patient of myPatients">
           <ion-avatar slot="start">
-            <ion-img src="../../../assets/icon/profile.svg"></ion-img>
+            <ion-img [src]="myPatientsMap.get(patient.id).profilePicture"></ion-img>
           </ion-avatar>
-          <ion-label>
-            <h2>{{patient.firstName}} {{patient.lastName}}</h2>
-            <p>Go back, Sam! I'm going to Mordor alone!</p>
+          <ion-label style="white-space: unset">
+            <h2 style="margin: 0">{{patient.firstName}} {{patient.lastName}}</h2>
+            <span style="margin: 0">{{getReportText(patient.id)}}</span>
           </ion-label>
         </ion-item>
       </ion-col>

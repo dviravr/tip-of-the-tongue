@@ -6,7 +6,8 @@ import { CollectionEnum } from '../../../core/enum/collections.enum';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { UserService } from '../../../core/services/user/user.service';
 import { Subscription } from 'rxjs';
-import { User } from '../../../core/models/user.model';
+import { FirestoreUser, User } from '../../../core/models/user.model';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -21,7 +22,22 @@ export class ProfileComponent implements OnInit, OnDestroy {
   subscriptions: Array<Subscription>;
   profilePicture: string;
   isLoadingPicture: boolean;
-  pictureHasChanged: boolean;
+  registerForm: FormGroup;
+  validationMessages = {
+    firstName: [
+      { type: 'required', message: 'נדרש להזין שם פרטי' }
+    ],
+    lastName: [
+      { type: 'required', message: 'נדרש להזין שם משפחה' }
+    ],
+    phoneNumber: [
+      { type: 'required', message: 'נדרש להזין מספר טלפון' },
+      { type: 'pattern', message: 'הזינו מספר טלפון תקין' }
+    ],
+    birthDate: [
+      { type: 'required', message: 'נדרש להזין תאריך לידה' }
+    ]
+  };
 
   constructor(public modalController: ModalController,
               private imageService: ImageService,
@@ -32,20 +48,43 @@ export class ProfileComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.isLoading = true;
     this.isLoadingPicture = true;
-    this.pictureHasChanged = true;
+    this.registerForm = new FormGroup({
+      firstName: new FormControl(undefined, [
+        Validators.required
+      ]),
+      lastName: new FormControl(undefined, [
+        Validators.required
+      ]),
+      phoneNumber: new FormControl(undefined, [
+        Validators.minLength(10),
+        Validators.maxLength(10),
+        Validators.pattern(/^05\d{8}$/),
+        Validators.required
+      ]),
+      email: new FormControl(undefined, [
+        Validators.required,
+        Validators.email
+      ]),
+      birthDate: new FormControl(undefined, [
+        Validators.required
+      ])
+    });
     this.subscriptions = [
       this.authService.loggedInUser$.subscribe((user) => {
         this.loggedInUser = user;
-        if (user.profilePicture && this.pictureHasChanged) {
+        this.firstName.setValue(user.firstName);
+        this.lastName.setValue(user.lastName);
+        this.birthDate.setValue(user.birthDate);
+        this.phoneNumber.setValue(user.phoneNumber);
+        this.email.setValue(user.email);
+        if (user.profilePicture && this.isLoadingPicture) {
           this.imageService.getImageFromStorage(user.profilePicture).then(profilePicture => {
             this.profilePicture = profilePicture;
             this.isLoadingPicture = false;
-            this.pictureHasChanged = false;
           });
         } else if (!user.profilePicture) {
           this.profilePicture = '';
           this.isLoadingPicture = false;
-          this.pictureHasChanged = false;
         }
         this.isLoading = false;
       })
@@ -53,11 +92,45 @@ export class ProfileComponent implements OnInit, OnDestroy {
   }
 
   async getPicture(source: CameraSource) {
-    this.pictureHasChanged = true;
-    this.isLoadingPicture = true;
-    let photoData = await this.imageService.saveImageToStorage(await this.imageService.getPicture(source),
-      `${ CollectionEnum.users }/${this.loggedInUser.id}`);
-    await this.userService.update(this.loggedInUser.id, { profilePicture: photoData.ref.fullPath });
+    this.imageService.getPicture(source).then(async (dataUrl) => {
+      this.isLoadingPicture = true;
+      let photoData = await this.imageService.saveImageToStorage(dataUrl,
+        `${ CollectionEnum.users }/${ this.loggedInUser.id }`);
+      await this.userService.update(this.loggedInUser.id, { profilePicture: photoData.ref.fullPath });
+    })
+  }
+
+  async updateUser() {
+    const { firstName, lastName, phoneNumber, email, birthDate } = this.registerForm.value;
+    const userNewData: Partial<FirestoreUser> = {
+      firstName,
+      lastName,
+      phoneNumber,
+      email,
+      birthDate
+    };
+    await this.userService.update(this.loggedInUser.id, userNewData);
+    this.modalController.dismiss();
+  }
+
+  get firstName() {
+    return this.registerForm.get('firstName');
+  }
+
+  get lastName() {
+    return this.registerForm.get('lastName');
+  }
+
+  get phoneNumber() {
+    return this.registerForm.get('phoneNumber');
+  }
+
+  get email() {
+    return this.registerForm.get('email');
+  }
+
+  get birthDate() {
+    return this.registerForm.get('birthDate');
   }
 
   ngOnDestroy(): void {
