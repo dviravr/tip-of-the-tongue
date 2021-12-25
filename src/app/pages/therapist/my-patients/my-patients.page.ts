@@ -26,6 +26,4 @@ export class MyPatientsPage implements OnInit {
       }
     });
   }
-
-
 }

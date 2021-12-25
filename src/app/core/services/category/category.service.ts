@@ -24,7 +24,6 @@ export class CategoryService extends GenericModelService<Category, FirestoreCate
 
   getMainCategories() {
     const query = this.collection.ref.where('isMainCategory', '==', true);
-
     return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
   }
 }

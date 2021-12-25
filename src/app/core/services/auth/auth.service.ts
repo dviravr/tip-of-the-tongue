@@ -13,7 +13,7 @@ import { NavController } from '@ionic/angular';
 export class AuthService {
 
   loggedInUser$: Observable<User>;
-  firebaseUser$: Observable<FirebaseUser>
+  firebaseUser$: Observable<FirebaseUser>;
 
   constructor(private angularFireAuth: AngularFireAuth,
               private navController: NavController,
