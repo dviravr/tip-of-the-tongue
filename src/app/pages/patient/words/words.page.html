@@ -12,7 +12,8 @@
         <h2 class="font-weight-bold" *ngIf="!isAddNewWord">בחר את המילה אותה חיפשת</h2>
         <h2 class="font-weight-bold" *ngIf="isAddNewWord">המילים שכבר קיימות:</h2>
         <div *ngIf="finalWord?.length > 0; else noWords">
-          <ion-button *ngFor="let word of finalWord" mode="ios" (click)="chooseWord(word)" class="w-75">
+          <ion-button *ngFor="let word of finalWord" mode="ios" [fill]="isAddNewWord ? 'default' : 'solid'"
+                      color="secondary" (click)="chooseWord(word)" class="w-75">
             {{word.word}}
           </ion-button>
         </div>
