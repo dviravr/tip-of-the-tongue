@@ -18,8 +18,8 @@ export class PatientHomePage implements OnInit {
   ngOnInit() {
   }
 
-  goToMainCategories() {
-    this.navController.navigateForward('/patient/categories');
+  goToMainCategories(isAddNewWord: boolean) {
+    this.navController.navigateForward('/patient/categories', { state: { isAddNewWord } });
   }
 
   async logout() {

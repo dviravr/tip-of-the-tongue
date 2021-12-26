@@ -5,6 +5,7 @@ import { CategoryService } from '../../../core/services/category/category.servic
 import { NavController } from '@ionic/angular';
 import { ReportService } from '../../../core/services/report/report.service';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-categories',
@@ -17,8 +18,10 @@ export class CategoriesPage implements OnInit {
   isLoading: boolean;
   arrayOfCategories: Array<string>;
   question: string;
+  isAddNewWord: boolean;
 
   constructor(private wordService: WordService,
+              private router: Router,
               private vibration : Vibration,
               private categoryService: CategoryService,
               private navController: NavController,
@@ -26,9 +29,10 @@ export class CategoriesPage implements OnInit {
   }
 
   async ngOnInit() {
+    this.isLoading = true;
+    this.isAddNewWord = this.router.getCurrentNavigation().extras.state?.isAddNewWord;
     this.question = 'בחר קטגוריה ראשית';
     this.arrayOfCategories = [];
-    this.isLoading = true;
     this.currentCategories = await this.categoryService.getMainCategories();
     this.isLoading = false;
     this.reportService.startTime = new Date();
@@ -46,7 +50,8 @@ export class CategoriesPage implements OnInit {
       this.navController.navigateRoot('/patient/words', {
         state: {
           categoryID: this.arrayOfCategories,
-          question: category.subQuestion
+          question: category.subQuestion,
+          isAddNewWord: this.isAddNewWord,
         },
         animationDirection: 'forward'
       });

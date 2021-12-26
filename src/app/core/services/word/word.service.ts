@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentData, QueryDocumentSnapshot } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentData, DocumentReference, QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { CollectionEnum } from '../../enum/collections.enum';
 import { FirestoreWord, Word } from '../../models/word.model';
 import { GenericModelService } from '../generic-model/generic-model.service';
+import { UserService } from '../user/user.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WordService extends GenericModelService<Word, FirestoreWord> {
 
-  constructor(protected angularFirestore: AngularFirestore) {
+  constructor(protected angularFirestore: AngularFirestore,
+              private userService: UserService) {
     super(angularFirestore, CollectionEnum.words);
   }
 
@@ -19,30 +21,49 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
       // @ts-ignore
       data.id = doc.id;
       if (data.patientRef) {
-        data.patientId = data.patient.id;
+        data.patientId = data.patientRef.id;
       }
       delete data.patientRef;
       return data as Word;
     }
   }
 
-  getFinalWords(categoriesIds: Array<string>) {
+  async getFinalWords(categoriesIds: Array<string>, patientId: string): Promise<Array<Word>> {
+    let patientRef = await this.userService.getReferenceByUid(patientId);
     if (categoriesIds?.length > 0) {
-      let query = this.collection.ref.where(`categories.${ categoriesIds[0] }`, '==', true);
-      for (let i = 1; i < categoriesIds.length; i++) {
-        query = query.where(`categories.${ categoriesIds[i] }`, '==', true);
+      let patientQuery = this.collection.ref.where('patientRef', '==', patientRef);
+      let systemQuery = this.collection.ref.where('patientRef', '==', null);
+      for (let i = 0; i < categoriesIds.length; i++) {
+        systemQuery = systemQuery.where(`categories.${ categoriesIds[i] }`, '==', true);
+        patientQuery = patientQuery.where(`categories.${ categoriesIds[i] }`, '==', true);
       }
-      return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
+
+      return Promise.all([patientQuery.get(), systemQuery.get()]).then((res) => {
+        let words = res[0].docs.map(word => this.mapModelToClient(word));
+        words = words.concat(res[1].docs.map(word => this.mapModelToClient(word)));
+        return words;
+      })
     }
   }
 
-  // getWords(categories: Array<string>) {
-  //   let query = this.collection.ref;
-  //
-  //   categories.forEach(category => {
-  //     query = query.where('categories', 'array-contains', category);
-  //   });
-  //
-  //   return query.get().then(res => res.docs.map(category => this.mapModelToClient(category)));
+  async addNewWord(word: string, categoriesIds: Array<string>, patientId: string) {
+    const categories: { [key: string]: boolean } = {};
+    categoriesIds.forEach(category => {
+      categories[category] = true;
+    });
+    let patientRef = await this.userService.getReferenceByUid(patientId);
+    const newWord: FirestoreWord = {
+      word,
+      categories,
+      patientRef
+    };
+    await this.create(newWord);
+  }
+
+  // async updateAllToNull() {
+  //   let allWords = await this.getAll();
+  //   allWords.forEach(word => {
+  //     this.update(word.id, { patientRef: null });
+  //   })
   // }
 }
