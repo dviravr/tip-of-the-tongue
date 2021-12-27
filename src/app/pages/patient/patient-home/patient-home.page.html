@@ -1,19 +1,25 @@
-<app-tip-header [headerText]="'patient-home'"></app-tip-header>
+<app-tip-header [headerText]="'עמוד הבית'"></app-tip-header>
 
 <ion-content [fullscreen]="true" [scrollY]="false">
   <ion-grid>
     <ion-row class="ion-justify-content-center">
       <ion-col size="11" size-md="7" size-lg="6" size-xl="4">
+        <ion-card style="height: 100px" mode="ios" class="ripple-parent ion-activatable" (click)="goToMainCategories(false)">
+          <ion-ripple-effect></ion-ripple-effect>
+          <ion-card-header class="h-100 d-flex justify-content-center align-items-center" style="font-size: x-large">
+            התחל
+          </ion-card-header>
+        </ion-card>
         <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="openMyProfile()">
           <ion-ripple-effect></ion-ripple-effect>
           <ion-card-header class="text-center" style="font-size: large">
             הפרופיל שלי
           </ion-card-header>
         </ion-card>
-        <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="goToMainCategories()">
+        <ion-card mode="ios" class="ripple-parent ion-activatable" (click)="goToMainCategories(true)">
           <ion-ripple-effect></ion-ripple-effect>
           <ion-card-header class="text-center" style="font-size: large">
-            התחל
+            הוספת מילה
           </ion-card-header>
         </ion-card>
       </ion-col>
@@ -25,7 +31,7 @@
   <ion-toolbar>
     <ion-row class="ion-justify-content-center">
       <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
-        <ion-button mode="ios" class="w-50" color="danger" fill="outline" (click)="logout()">
+        <ion-button mode="ios" class="w-75" color="danger" fill="outline" (click)="logout()">
           התנתק
         </ion-button>
       </ion-col>

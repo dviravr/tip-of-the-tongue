@@ -1,32 +1,43 @@
-<app-tip-header [headerText]="'רשימת המילים המוצעות'"></app-tip-header>
+<app-tip-header [headerText]="isAddNewWord ? 'הוספת מילה חדשה' : 'רשימת המילים המוצעות'"></app-tip-header>
 
 <ion-content [dir]="'rtl'">
   <ion-grid class="h-100">
     <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
-    <ion-row *ngIf="!isLoading && finalWord?.length > 0" class="ion-justify-content-center">
-      <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
-        <h2 class="font-weight-bold">בחר את המילה אותה חיפשת</h2>
-        <div *ngFor="let word of finalWord">
-          <ion-button mode="ios" (click)="chooseWord(word)" class="w-75">
+    <ion-row *ngIf="!isLoading" class="ion-justify-content-center">
+      <ion-col class="text-center" size="11" size-md="7" size-lg="6" size-xl="4">
+        <ion-item *ngIf="isAddNewWord" class="mb-3">
+          <ion-label position="floating">הכנס מילה חדשה</ion-label>
+          <ion-input [(ngModel)]="newWord"></ion-input>
+        </ion-item>
+        <h2 class="font-weight-bold" *ngIf="!isAddNewWord">בחר את המילה אותה חיפשת</h2>
+        <h2 class="font-weight-bold" *ngIf="isAddNewWord">המילים שכבר קיימות:</h2>
+        <div *ngIf="finalWord?.length > 0; else noWords">
+          <ion-button *ngFor="let word of finalWord" mode="ios" [fill]="isAddNewWord ? 'default' : 'solid'"
+                      color="secondary" (click)="chooseWord(word)" class="w-75">
             {{word.word}}
           </ion-button>
         </div>
+        <ng-template #noWords>
+          <h3>לא קיימות מילים</h3>
+        </ng-template>
       </ion-col>
     </ion-row>
   </ion-grid>
-
-
 </ion-content>
 
-  <ion-footer>
-    <ion-toolbar>
-      <ion-row class="ion-justify-content-center">
-        <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
-          <ion-button mode="ios" size="11" size-xl="4"
-                      class="w-75" color="danger" fill="outline" (click)="presentActionSheet()">
-            המילה שחיפשתי לא מופיעה
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-toolbar>
-  </ion-footer>
+<ion-footer>
+  <ion-toolbar>
+    <ion-row class="ion-justify-content-center">
+      <ion-col class="text-center col-12" size="11" size-md="7" size-lg="6" size-xl="4">
+        <ion-button mode="ios" size="11" size-xl="4" *ngIf="!isAddNewWord"
+                    class="w-75" color="danger" fill="outline" (click)="presentActionSheet()">
+          המילה שחיפשתי לא מופיעה
+        </ion-button>
+        <ion-button mode="ios" size="11" size-xl="4" *ngIf="isAddNewWord" [disabled]="!newWord"
+                    class="w-75" color="success" (click)="addNewWord()">
+          הוסף מילה
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>
