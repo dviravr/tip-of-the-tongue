@@ -5,6 +5,8 @@ import { take } from 'rxjs/operators';
 import { UserService } from '../../../core/services/user/user.service';
 import { ImageService } from '../../../core/services/image/image.service';
 import { ReportService } from '../../../core/services/report/report.service';
+import { IonRouterOutlet, ModalController } from '@ionic/angular';
+import { PatientComponent } from '../components/patient/patient.component';
 
 @Component({
   selector: 'app-my-patients',
@@ -15,18 +17,20 @@ export class MyPatientsPage implements OnInit {
 
   loggedInUser: User;
   myPatients: Array<User>;
-  myPatientsMap: Map<string, { wordsCounter: number, avgTime: number, profilePicture: string }>;
+  myPatientsMap: Map<string, { wordsCounter: number; avgTime: number; profilePicture: string }>;
   isLoading: boolean;
 
   constructor(private authService: AuthService,
               private userService: UserService,
               private reportService: ReportService,
-              private imageService: ImageService) {
+              private imageService: ImageService,
+              private routerOutlet: IonRouterOutlet,
+              private modalController: ModalController) {
   }
 
   ngOnInit() {
     this.isLoading = true;
-    this.myPatientsMap = new Map<string, { wordsCounter: number; avgTime: number; profilePicture: string }>()
+    this.myPatientsMap = new Map<string, { wordsCounter: number; avgTime: number; profilePicture: string }>();
     this.authService.loggedInUser$.pipe(take(1)).subscribe(async (user) => {
       this.loggedInUser = user;
       if (user.patientsIds?.length > 0) {
@@ -51,9 +55,24 @@ export class MyPatientsPage implements OnInit {
 
   getReportText(patientId: string) {
     if (this.myPatientsMap.get(patientId).wordsCounter === 0) {
-      return `מצא ${ this.myPatientsMap.get(patientId).wordsCounter } מילים`
+      return `מצא ${ this.myPatientsMap.get(patientId).wordsCounter } מילים`;
     }
     return `מצא ${ this.myPatientsMap.get(patientId).wordsCounter }
      מילים בממוצע של ${ this.myPatientsMap.get(patientId).avgTime.toFixed(2) } שניות למילה`;
   }
+
+  async openPatientReport(patient: User) {
+    const modal = await this.modalController.create({
+      component: PatientComponent,
+      cssClass: 'my-custom-class',
+      swipeToClose: true,
+      presentingElement: this.routerOutlet.nativeEl,
+      componentProps:{
+        patient
+      }
+    });
+    return await modal.present();
+  }
+
+
 }

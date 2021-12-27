@@ -37,16 +37,16 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
     }
   }
 
-  async getReport(userId: string): Promise<Map<Word, { counter: number; avgTime: number }>> {
+  async getReport(userId: string): Promise<Map<string, { word: Word; counter: number; avgTime: number }>> {
     const reports: Array<ReportSearch> = await Promise.all(await this.getAllReportsFromFirebase(userId));
-    const reportMap: Map<Word, { counter: number; avgTime: number }> = new Map();
+    const reportMap: Map<string, { word: Word; counter: number; avgTime: number }> = new Map();
     reports.forEach(report => {
-      const word = reportMap.get(report.word);
+      const word = reportMap.get(report.word.id);
       if (!word) {
-        reportMap.set(report.word, { counter: 1, avgTime: report.searchTime });
+        reportMap.set(report.word.id, { word: report.word, counter: 1, avgTime: report.searchTime });
       } else {
-        const newAvg = ((word.avgTime * word.counter) + report.searchTime) / word.counter + 1;
-        reportMap.set(report.word, { counter: word.counter + 1, avgTime: newAvg });
+        const newAvg = ((word.avgTime * word.counter) + report.searchTime) / (word.counter + 1);
+        reportMap.set(report.word.id, { word: report.word, counter: word.counter + 1, avgTime: newAvg });
       }
     });
     return reportMap;

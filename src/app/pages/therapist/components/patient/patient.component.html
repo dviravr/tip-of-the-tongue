@@ -1,0 +1,37 @@
+<ion-header mode="ios">
+  <ion-toolbar>
+    <div class="text-center">
+      <ion-title>
+        {{patient.firstName}} {{patient.lastName}}
+      </ion-title>
+    </div>
+    <ion-icon style="font-size: xx-large" name="close" (click)="modalController.dismiss()"></ion-icon>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-grid dir="rtl">
+    <ion-row class="ion-justify-content-center">
+      <ion-col class="right-col pb-2 font-weight-bold col-4 text-center">
+        מילה
+      </ion-col>
+      <ion-col class="center-col pb-2 font-weight-bold col-4 text-center">
+        מספר חיפושים
+      </ion-col>
+      <ion-col class="left-col pb-2 font-weight-bold col-4 text-center">
+        זמן ממוצע
+      </ion-col>
+    </ion-row>
+    <ion-row *ngFor="let word of report | keyvalue">
+      <ion-col class="right-col col-4 text-center">
+        {{word.value.word.word}}
+      </ion-col>
+      <ion-col class="center-col col-4 text-center">
+        {{word.value.counter}}
+      </ion-col>
+      <ion-col class="left-col col-4 text-  center">
+        {{word.value.avgTime}}
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

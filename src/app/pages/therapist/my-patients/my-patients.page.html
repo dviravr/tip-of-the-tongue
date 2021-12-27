@@ -6,7 +6,7 @@
     <ion-row class="ion-justify-content-center">
       <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
       <ion-col *ngIf="!isLoading" size="11" size-md="7" size-lg="6" size-xl="4">
-        <ion-item *ngFor="let patient of myPatients">
+        <ion-item (click)="openPatientReport(patient)" *ngFor="let patient of myPatients">
           <ion-avatar slot="start">
             <ion-img [src]="myPatientsMap.get(patient.id).profilePicture"></ion-img>
           </ion-avatar>

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, DocumentData, DocumentReference, QueryDocumentSnapshot } from '@angular/fire/firestore';
+import { AngularFirestore, DocumentData, QueryDocumentSnapshot } from '@angular/fire/firestore';
 import { CollectionEnum } from '../../enum/collections.enum';
 import { FirestoreWord, Word } from '../../models/word.model';
 import { GenericModelService } from '../generic-model/generic-model.service';
@@ -29,10 +29,11 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
   }
 
   async getFinalWords(categoriesIds: Array<string>, patientId: string): Promise<Array<Word>> {
-    let patientRef = await this.userService.getReferenceByUid(patientId);
+    const patientRef = await this.userService.getReferenceByUid(patientId);
     if (categoriesIds?.length > 0) {
       let patientQuery = this.collection.ref.where('patientRef', '==', patientRef);
       let systemQuery = this.collection.ref.where('patientRef', '==', null);
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < categoriesIds.length; i++) {
         systemQuery = systemQuery.where(`categories.${ categoriesIds[i] }`, '==', true);
         patientQuery = patientQuery.where(`categories.${ categoriesIds[i] }`, '==', true);
@@ -42,7 +43,7 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
         let words = res[0].docs.map(word => this.mapModelToClient(word));
         words = words.concat(res[1].docs.map(word => this.mapModelToClient(word)));
         return words;
-      })
+      });
     }
   }
 
@@ -51,7 +52,7 @@ export class WordService extends GenericModelService<Word, FirestoreWord> {
     categoriesIds.forEach(category => {
       categories[category] = true;
     });
-    let patientRef = await this.userService.getReferenceByUid(patientId);
+    const patientRef = await this.userService.getReferenceByUid(patientId);
     const newWord: FirestoreWord = {
       word,
       categories,
