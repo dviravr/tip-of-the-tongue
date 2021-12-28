@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 
 import { TherapistPageRoutingModule } from './therapist-routing.module';
+import { PatientComponent } from './components/patient/patient.component';
 
 @NgModule({
   imports: [
@@ -13,6 +14,7 @@ import { TherapistPageRoutingModule } from './therapist-routing.module';
     IonicModule,
     TherapistPageRoutingModule
   ],
-  declarations: []
+  declarations: [PatientComponent],
+  exports: [PatientComponent]
 })
 export class TherapistPageModule {}

@@ -6,6 +6,8 @@ import { CollectionEnum } from '../../enum/collections.enum';
 import { User } from '../../models/user.model';
 import { Word } from '../../models/word.model';
 import * as moment from 'moment';
+import { UserService } from '../user/user.service';
+import { WordService } from '../word/word.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,9 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
   startTime: Date;
   endTime: Date;
 
-  constructor(protected angularFirestore: AngularFirestore) {
+  constructor(protected angularFirestore: AngularFirestore,
+              private userService: UserService,
+              private wordService: WordService) {
     super(angularFirestore, CollectionEnum.reports);
   }
 
@@ -26,10 +30,10 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
       // @ts-ignore
       report.id = doc.id;
       if (report.patientRef) {
-        report.patientID = report.patientRef.id;
+        report.patientId = report.patientRef.id;
       }
       if (report.wordRef) {
-        report.wordId = await this.getByUid(report.wordRef.id);
+        report.word = await this.wordService.getByUid(report.wordRef.id);
       }
       delete report.wordRef;
       delete report.patientRef;
@@ -59,21 +63,21 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
       totTime += report.searchTime;
     });
     const avgTime = totTime / reports.length;
-    return { wordsCounter: reports.length, avgTime: avgTime };
+    return { wordsCounter: reports.length, avgTime };
   }
 
   async getAllReportsFromFirebase(userId: string) {
-    const userRef = await this.getReferenceByUid(userId);
+    const userRef = await this.userService.getReferenceByUid(userId);
     const query = this.collection.ref.where('patientRef', '==', userRef);
     return query.get().then(res => res.docs.map(report => this.mapModelToClient(report)));
   }
 
   async createNewReport(loggedInUser: User, word: Word) {
     const report: FirestoreReportSearch = {
-      patientRef: await this.getReferenceByUid(loggedInUser.id),
-      wordRef: await this.getReferenceByUid(word.id),
+      patientRef: await this.userService.getReferenceByUid(loggedInUser.id),
+      wordRef: await this.wordService.getReferenceByUid(word.id),
       searchTime: moment.duration(this.endTime.getTime() - this.startTime.getTime()).as('seconds')
     };
-    this.create(report);
+    await this.create(report);
   }
 }

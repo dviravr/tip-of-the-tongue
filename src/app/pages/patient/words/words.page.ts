@@ -54,10 +54,9 @@ export class WordsPage implements OnInit {
   async chooseWord(word: Word) {
     if (!this.isAddNewWord) {
       this.vibration.vibrate(50);
-      await this.presentAlertConfirm();
-      const loggedInUser: User = (await this.authService.loggedInUser$.toPromise())[1];
       this.reportService.endTime = new Date();
-      this.reportService.createNewReport(loggedInUser, word);
+      await this.reportService.createNewReport(this.loggedInUser, word);
+      await this.presentAlertConfirm();
     }
   }
 
