@@ -12,25 +12,25 @@
 <ion-content>
   <ion-grid dir="rtl">
     <ion-row class="ion-justify-content-center">
-      <ion-col class="right-col pb-2 font-weight-bold col-4 text-center">
+      <ion-col class="right-col pb-2 font-weight-bold text-center">
         מילה
       </ion-col>
-      <ion-col class="center-col pb-2 font-weight-bold col-4 text-center">
+      <ion-col class="center-col pb-2 font-weight-bold text-center">
         מספר חיפושים
       </ion-col>
-      <ion-col class="left-col pb-2 font-weight-bold col-4 text-center">
+      <ion-col class="left-col pb-2 font-weight-bold text-center">
         זמן ממוצע
       </ion-col>
     </ion-row>
-    <ion-row *ngFor="let word of report | keyvalue">
-      <ion-col class="right-col col-4 text-center">
-        {{word.value.word.word}}
+    <ion-row *ngFor="let wordId of report.keys()">
+      <ion-col class="right-col col-5 text-right">
+        {{report.get(wordId).word.word}}
       </ion-col>
-      <ion-col class="center-col col-4 text-center">
-        {{word.value.counter}}
+      <ion-col class="center-col col-2 text-center">
+        {{report.get(wordId).counter}}
       </ion-col>
-      <ion-col class="left-col col-4 text-  center">
-        {{word.value.avgTime}}
+      <ion-col class="left-col col-5">
+        {{report.get(wordId).avgTime + ' ש\''}}
       </ion-col>
     </ion-row>
   </ion-grid>
