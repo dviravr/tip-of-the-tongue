@@ -8,7 +8,6 @@ import { User } from '../../../core/models/user.model';
 import { ActionSheetController, NavController, ToastController } from '@ionic/angular';
 import { AlertController } from '@ionic/angular';
 import { Vibration } from '@awesome-cordova-plugins/vibration/ngx';
-import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
