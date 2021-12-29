@@ -58,7 +58,7 @@ export class MyPatientsPage implements OnInit {
       return `מצא ${ this.myPatientsMap.get(patientId).wordsCounter } מילים`;
     }
     return `מצא ${ this.myPatientsMap.get(patientId).wordsCounter }
-     מילים בממוצע של ${ this.myPatientsMap.get(patientId).avgTime.toFixed(2) } שניות למילה`;
+     מילים בממוצע של ${ this.myPatientsMap.get(patientId).avgTime.toFixed(1) } שניות למילה`;
   }
 
   async openPatientReport(patient: User) {

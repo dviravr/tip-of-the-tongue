@@ -8,7 +8,7 @@ import { Category } from '../../../../core/models/category.model';
 @Component({
   selector: 'app-patient',
   templateUrl: './patient.component.html',
-  styleUrls: ['./patient.component.scss'],
+  styleUrls: ['./patient.component.scss']
 })
 export class PatientComponent implements OnInit {
   @Input() patient: User;
@@ -28,5 +28,13 @@ export class PatientComponent implements OnInit {
     this.wordsReport = await this.reportService.getWordsReport(this.patient.id);
     this.categoriesReport = await this.reportService.getCategoriesReport(this.patient.id);
     this.isLoading = false;
+  }
+
+  sortWordsReport(a, b) {
+    return b.value.avgTime - a.value.avgTime
+  }
+
+  sortCategoriesReport(a, b) {
+    return b.value.wordsCounter - a.value.wordsCounter
   }
 }

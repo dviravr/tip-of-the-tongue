@@ -70,7 +70,7 @@ export class ReportService extends GenericModelService<ReportSearch, FirestoreRe
       if (!mainCategory) {
         reportMap.set(report.mainCategory.id, { mainCategory: report.mainCategory, wordsCounter: 1 });
       } else {
-        reportMap.set(report.word.id, {
+        reportMap.set(report.mainCategory.id, {
           mainCategory: report.mainCategory,
           wordsCounter: mainCategory.wordsCounter + 1
         });
