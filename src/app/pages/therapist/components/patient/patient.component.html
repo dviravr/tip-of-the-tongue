@@ -10,28 +10,67 @@
 </ion-header>
 
 <ion-content>
-  <ion-grid dir="rtl">
-    <ion-row class="ion-justify-content-center">
-      <ion-col class="right-col pb-2 font-weight-bold text-center">
-        מילה
-      </ion-col>
-      <ion-col class="center-col pb-2 font-weight-bold text-center">
-        מספר חיפושים
-      </ion-col>
-      <ion-col class="left-col pb-2 font-weight-bold text-center">
-        זמן ממוצע
-      </ion-col>
-    </ion-row>
-    <ion-row *ngFor="let wordId of report.keys()">
-      <ion-col class="right-col col-5 text-right">
-        {{report.get(wordId).word.word}}
-      </ion-col>
-      <ion-col class="center-col col-2 text-center">
-        {{report.get(wordId).counter}}
-      </ion-col>
-      <ion-col class="left-col col-5">
-        {{report.get(wordId).avgTime + ' ש\''}}
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
+  <ng-container *ngIf="!isLoading">
+    <div class="mb-2 mt-3 w-100 d-flex justify-content-center">
+      <ion-segment [(ngModel)]="reportType" class="w-50">
+        <ion-segment-button [value]="'words'">
+          <ion-label>מילים</ion-label>
+        </ion-segment-button>
+        <ion-segment-button [value]="'categories'">
+          <ion-label>קטגוריות</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+    <ion-grid dir="rtl">
+      <ng-container *ngIf="reportType === 'words'">
+        <ion-row class="ion-justify-content-center">
+          <ion-col class="right-col pb-2 font-weight-bold text-center">
+            מילה
+          </ion-col>
+          <ion-col class="center-col pb-2 font-weight-bold text-center">
+            מספר חיפושים
+          </ion-col>
+          <ion-col class="left-col pb-2 font-weight-bold text-center">
+            זמן ממוצע
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let word of wordsReport | keyvalue">
+          <ion-col class="right-col col-5 text-right">
+            {{word.value.word.word}}
+          </ion-col>
+          <ion-col class="center-col col-2 text-center">
+            {{word.value.counter}}
+          </ion-col>
+          <ion-col class="left-col col-5">
+            {{word.value.avgTime + ' ש\''}}
+          </ion-col>
+        </ion-row>
+      </ng-container>
+      <ng-container  *ngIf="reportType === 'categories'">
+        <ion-row class="ion-justify-content-center">
+          <ion-col class="right-col col-7 pb-2 font-weight-bold text-center">
+            קטגוריה ראשית
+          </ion-col>
+          <ion-col class="left-col col-5 pb-2 font-weight-bold text-center">
+            מספר חיפושים
+          </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let category of categoriesReport | keyvalue">
+          <ion-col class="right-col col-7 text-right">
+            {{category.value.mainCategory.categoryName}}
+          </ion-col>
+          <ion-col class="left-col col-5 text-center">
+            {{category.value.wordsCounter}}
+          </ion-col>
+        </ion-row>
+      </ng-container>
+    </ion-grid>
+  </ng-container>
 </ion-content>
+
+<ng-template #noSearch>
+  <div class="h-50 d-flex justify-content-center align-items-center">
+    <h1 class="text-center">לא קיימים חיפושים</h1>
+  </div>
+</ng-template>

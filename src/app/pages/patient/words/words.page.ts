@@ -55,7 +55,7 @@ export class WordsPage implements OnInit {
     if (!this.isAddNewWord) {
       this.vibration.vibrate(50);
       this.reportService.endTime = new Date();
-      await this.reportService.createNewReport(this.loggedInUser, word);
+      await this.reportService.createNewReport(this.loggedInUser, word, this.categoriesIds[0]);
       await this.presentAlertConfirm();
     }
   }

@@ -3,6 +3,7 @@ import { User } from '../../../../core/models/user.model';
 import { ModalController } from '@ionic/angular';
 import { Word } from '../../../../core/models/word.model';
 import { ReportService } from '../../../../core/services/report/report.service';
+import { Category } from '../../../../core/models/category.model';
 
 @Component({
   selector: 'app-patient',
@@ -11,7 +12,10 @@ import { ReportService } from '../../../../core/services/report/report.service';
 })
 export class PatientComponent implements OnInit {
   @Input() patient: User;
-  report: Map<string, { word: Word; counter: number; avgTime: number }>;
+  wordsReport: Map<string, { word: Word; counter: number; avgTime: number }>;
+  categoriesReport: Map<string, { mainCategory: Category, wordsCounter: number }>;
+  isLoading: boolean;
+  reportType: 'words' | 'categories' = 'words';
 
   constructor(
     public modalController: ModalController,
@@ -20,7 +24,9 @@ export class PatientComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.report = await this.reportService.getReport(this.patient.id);
+    this.isLoading = true;
+    this.wordsReport = await this.reportService.getWordsReport(this.patient.id);
+    this.categoriesReport = await this.reportService.getCategoriesReport(this.patient.id);
+    this.isLoading = false;
   }
-
 }
